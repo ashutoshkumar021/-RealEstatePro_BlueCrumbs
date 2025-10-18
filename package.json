@@ -1,0 +1,18 @@
+{
+  "name": "realestateepro",
+  "version": "1.0.0",
+  "description": "Real Estate Pro - Property Management System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "cd RealEstatePro/server && node server.js",
+    "dev": "cd RealEstatePro/server && nodemon server.js",
+    "setup": "cd RealEstatePro/server && npm install"
+  },
+  "keywords": [
+    "real-estate",
+    "property",
+    "management"
+  ],
+  "author": "",
+  "license": "ISC"
+}

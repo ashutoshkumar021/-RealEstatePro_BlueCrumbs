@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NRI Corner | BlueCrumbs</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Scoped CSS for NRI Corner -->
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f9fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Sticky header */
+    header.header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Page Banner with Breadcrumb */
+    .page-fixed-banner {
+      /* background: linear-gradient(135deg, rgba(13, 44, 84, 0.9), rgba(102, 126, 234, 0.8)), */
+       background:  url("./images/nri.jpg") center/cover no-repeat;
+      padding: 120px 0 70px;
+      text-align: center;
+      color: #fff;
+      margin-top: 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-fixed-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(247,184,1,0.15), transparent 50%);
+      pointer-events: none;
+    }
+
+    .page-fixed-banner h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-shadow: 0 3px 15px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-fixed-banner .breadcrumb-nav {
+      background: none;
+      padding: 10px 0 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .page-fixed-banner .breadcrumb-icon {
+      color: #f7b801;
+      font-size: 1.3rem;
+      margin-right: 10px;
+    }
+
+    .page-fixed-banner .breadcrumb {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 8px 20px;
+      margin: 0;
+      font-size: 0.95rem;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .page-fixed-banner .breadcrumb-item,
+    .page-fixed-banner .breadcrumb-item a {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .page-fixed-banner .breadcrumb-item a:hover {
+      color: #f7b801;
+      text-shadow: 0 0 10px rgba(247, 184, 1, 0.5);
+    }
+
+    .page-fixed-banner .breadcrumb-item.active {
+      color: #f7b801;
+      font-weight: 600;
+    }
+
+    .page-fixed-banner .breadcrumb-item + .breadcrumb-item::before {
+      color: rgba(255, 255, 255, 0.6);
+      padding: 0 10px;
+      content: '/';
+    }
+
+    /* Section Title */
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #0d2c54;
+      position: relative;
+      text-align: center;
+    }
+    .section-title::after {
+      content: '';
+      width: 60px;
+      height: 3px;
+      background: #f7b801;
+      display: block;
+      margin: 6px auto 0 auto;
+    }
+
+    /* Accordion */
+    #accordion .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      transition: 0.3s;
+      background: #fff;
+    }
+    #accordion .card-header {
+      background-color: #f8f9fb;
+      padding: 15px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      transition: background-color 0.3s;
+    }
+    #accordion .card-header:hover {
+      background-color: #f0f4f8;
+    }
+    #accordion .card-header i {
+      transition: transform 0.3s;
+    }
+    #accordion .card.active .card-header i {
+      transform: rotate(180deg);
+    }
+    #accordion .card-body {
+      padding: 15px 20px;
+      color: #4a5568;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      display: none;
+    }
+    #accordion .card.active .card-body,
+    #accordion .card-body.show {
+      display: block;
+    }
+
+    /* Enquiry Box */
+    .enquiry-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+    .enquiry-box h4 {
+      font-weight: 600;
+      margin-bottom: 25px;
+      border-bottom: 3px solid #f7b801;
+      padding-bottom: 5px;
+      display: inline-block;
+      color: #0d2c54;
+    }
+    .enquiry-box .form-control {
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 12px 15px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+    .enquiry-box .form-control:focus {
+      border-color: #f7b801;
+      box-shadow: 0 0 8px rgba(247,184,1,0.3);
+      outline: none;
+    }
+    .enquiry-box button {
+      width: 100%;
+      padding: 12px;
+      background: #f7b801;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .enquiry-box button:hover {
+      background: #e0a600;
+    }
+
+    /* Layout */
+    .nri-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    .nri-accordion { flex: 2; }
+    .nri-enquiry { flex: 1; min-width: 300px; }
+
+    /* Responsive */
+    @media(max-width: 992px){
+      .nri-wrapper {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Page Banner with Breadcrumb -->
+  <div class="page-fixed-banner">
+    <div class="container">
+      <h1>NRI Corner</h1>
+       <div class="breadcrumb-nav">
+         <i class="fa-solid fa-globe breadcrumb-icon"></i>
+        <nav aria-label="breadcrumb">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li>NRI Corner</li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <br>
+
+
+  <!-- Main Content -->
+  <main class="container my-4">
+    <div class="nri-wrapper">
+      <!-- Accordion -->
+      <div class="nri-accordion">
+        <div id="accordion">
+          <div class="card">
+            <div class="card-header">
+              Can NRI buy properties in India? <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="card-body">
+              Yes, a non-resident Indian can buy both residential and commercial properties in India. 
+              There may be no restriction on the quantity of residential or commercial properties that an NRI can purchase. <br><br>
+              <strong>Exception:</strong> An NRI cannot purchase agricultural land, plantation land or a farm property in India.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              NRI / PIOs <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="card-body">
+              Persons of Indian Origin (PIOs) and NRIs have similar property rights in India. They can purchase 
+              residential and commercial properties but are restricted from agricultural, plantation, and farmhouse properties.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              Is TAN needed for the purchase of property from NRI? <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="card-body">
+              Yes, if you are buying a property from an NRI, you must deduct TDS (Tax Deducted at Source) and 
+              to do that, obtaining a TAN (Tax Deduction and Collection Account Number) is mandatory.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enquiry Form -->
+      <div class="nri-enquiry">
+        <div class="enquiry-box">
+          <h4>Enquiry Form</h4>
+          <form id="nri-enquiry-form">
+            <input type="text" name="name" class="form-control" placeholder="Enter Name" required>
+            <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+            <input type="tel" name="phone" class="form-control" placeholder="Enter Phone" required maxlength="10">
+            <textarea name="message" class="form-control" rows="3" placeholder="Enter Message"></textarea>
+            <input type="hidden" name="source" value="NRI Corner Form">
+            <button type="submit">Submit Enquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Floating Call Button -->
+  <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry"><i class="fas fa-phone-alt"></i></button>
+
+  <!-- Quick Enquiry Popup -->
+  <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content">
+      <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+      <h3>Need Help?<br/>Get a quick call back.</h3>
+      <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter Name" required aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Enter Phone" required maxlength="10" aria-label="Your Phone Number" />
+        </div>
+        <input type="hidden" name="source" value="NRI Corner Quick Popup" />
+        <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toaster" role="status" aria-live="polite"></div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/form-handler.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      // Load header & footer
+      $('#header-placeholder').load('templates/header.html', function() {
+        initializeHeaderSidebar();
+      });
+      $('#footer-placeholder').load('templates/footer.html');
+
+      // Sidebar
+      function initializeHeaderSidebar(){
+        $(document).on('click', '#sidebar-toggle', function () {
+          $('#sidebar').addClass('active').attr('aria-hidden','false');
+          $('.sidebar-overlay').addClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','true');
+          $('body').css('overflow','hidden');
+        });
+        $(document).on('click', '#sidebar-close, .sidebar-overlay', function () {
+          $('#sidebar').removeClass('active').attr('aria-hidden','true');
+          $('.sidebar-overlay').removeClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','false');
+          $('body').css('overflow','');
+        });
+        $(document).on('click', '.submenu-toggle', function(e){
+          e.preventDefault();
+          const parent = $(this).closest('.has-submenu');
+          parent.toggleClass('open');
+        });
+      }
+
+      // --- Quick Enquiry Popup & Form ---
+      const floatingEnquiryBtn = document.getElementById('floating-enquiry-btn');
+      const quickEnquiryPopup = document.getElementById('quick-enquiry-popup');
+      const closePopupBtn = document.getElementById('close-popup-btn');
+      const popupInquiryForm = document.getElementById('popup-inquiry-form');
+
+      if (floatingEnquiryBtn) {
+        floatingEnquiryBtn.addEventListener('click', () => {
+          quickEnquiryPopup.style.display = 'block';
+          quickEnquiryPopup.setAttribute('aria-hidden', 'false');
+        });
+      }
+
+      if (closePopupBtn) {
+        closePopupBtn.addEventListener('click', () => {
+          quickEnquiryPopup.style.display = 'none';
+          quickEnquiryPopup.setAttribute('aria-hidden', 'true');
+        });
+      }
+
+      if (popupInquiryForm) {
+        popupInquiryForm.addEventListener('submit', handleFormSubmit);
+      }
+      
+      // --- NRI Form Submission ---
+      const nriForm = document.getElementById('nri-enquiry-form');
+      if (nriForm) {
+        nriForm.addEventListener('submit', handleFormSubmit);
+      }
+
+      async function handleFormSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch('/api/inquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.message || 'An error occurred.');
+          }
+
+          showToaster(result.message || 'Inquiry sent successfully!', 'success');
+          form.reset();
+
+          // If it's the popup form, close it after success
+          if (form.id === 'popup-inquiry-form') {
+            setTimeout(() => {
+              quickEnquiryPopup.style.display = 'none';
+              quickEnquiryPopup.setAttribute('aria-hidden', 'true');
+            }, 2000);
+          }
+
+        } catch (error) {
+          showToaster(error.message, 'error');
+        }
+      }
+
+      function showToaster(message, type = 'success') {
+        const toaster = document.getElementById('toaster');
+        if (!toaster) return;
+        toaster.textContent = message;
+        toaster.className = `show ${type}`;
+        setTimeout(() => { toaster.className = toaster.className.replace('show', ''); }, 3000);
+      }
+
+      // --- Accordion Toggle ---
+      $('.card-header').on('click', function() {
+        const card = $(this).parent();
+        const body = card.find('.card-body');
+        const icon = $(this).find('i');
+        
+        // Toggle current card
+        card.toggleClass('active');
+        body.slideToggle(300);
+        icon.toggleClass('fa-chevron-down fa-chevron-up');
+      });
+    });
+  </script>
+</body>
+</html>

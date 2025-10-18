@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | BlueCrumbs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin-style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p id="login-status" class="status-message"></p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="#" id="forgot-password" style="color: #f7b801; text-decoration: none; font-size: 14px;">Forgot Password?</a>
+                </div>
+            </form>
+            
+            <!-- Password Reset Modal -->
+            <div id="reset-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 400px;">
+                    <h3 style="margin-bottom: 20px;">Reset Password</h3>
+                    <form id="reset-form">
+                        <div class="input-group">
+                            <label for="reset-email">Enter Admin Email</label>
+                            <input type="email" id="reset-email" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" required minlength="6">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button type="submit" class="btn">Reset Password</button>
+                            <button type="button" id="cancel-reset" class="btn" style="background: #666;">Cancel</button>
+                        </div>
+                    </form>
+                    <p id="reset-status" style="margin-top: 10px; color: #666;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toaster" class=""></div>
+    <script src="js/auth.js"></script>
+</body>
+</html>

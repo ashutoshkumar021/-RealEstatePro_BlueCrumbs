@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Admin Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #1abc9c;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #1abc9c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #16a085;
+        }
+        .btn-primary {
+            background: #3498db;
+        }
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        code {
+            background: #2c3e50;
+            color: #1abc9c;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .test-results {
+            margin-top: 20px;
+        }
+        .test-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #ccc;
+            background: #f9f9f9;
+        }
+        .test-item.pass {
+            border-left-color: #27ae60;
+        }
+        .test-item.fail {
+            border-left-color: #e74c3c;
+        }
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Admin Portal Verification Tool</h1>
+    
+    <div class="card">
+        <h2>Quick Access Links</h2>
+        <a href="http://localhost:3000/admin/login.html" target="_blank" class="btn btn-primary">
+            🔐 Admin Login
+        </a>
+        <a href="http://localhost:3000/admin/dashboard.html" target="_blank" class="btn btn-primary">
+            📊 Admin Dashboard
+        </a>
+        <a href="http://localhost:3000/admin/" target="_blank" class="btn">
+            🏠 Admin Home
+        </a>
+    </div>
+
+    <div class="card">
+        <h2>Server Status Check</h2>
+        <button onclick="checkServer()" class="btn">Check Server Status</button>
+        <div id="server-status" class="test-results"></div>
+    </div>
+
+    <div class="card">
+        <h2>API Endpoints Test</h2>
+        <button onclick="testAPIs()" class="btn">Test All APIs</button>
+        <div id="api-results" class="test-results"></div>
+    </div>
+
+    <div class="card">
+        <h2>Admin Login Test</h2>
+        <p>Test credentials (you may need to reset password first):</p>
+        <p>Email: <code>admin@bluecrumbs.com</code></p>
+        <form id="test-login" style="display: inline-block;">
+            <input type="password" id="test-password" placeholder="Enter password" style="padding: 8px; margin: 5px;">
+            <button type="submit" class="btn btn-primary">Test Login</button>
+        </form>
+        <div id="login-result" class="test-results"></div>
+    </div>
+
+    <div class="card">
+        <h2>Live Preview</h2>
+        <p>If the admin page loads correctly below, everything is working:</p>
+        <iframe src="http://localhost:3000/admin/login.html" id="preview-frame"></iframe>
+    </div>
+
+    <script>
+        async function checkServer() {
+            const statusDiv = document.getElementById('server-status');
+            statusDiv.innerHTML = '<div class="test-item">Checking server...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:3000/admin/login.html');
+                const text = await response.text();
+                
+                if (text.includes('<!DOCTYPE html>')) {
+                    statusDiv.innerHTML = `
+                        <div class="test-item pass">
+                            <span class="status success">✓ Server Running</span>
+                            Admin login page is being served correctly
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="test-item fail">
+                            <span class="status error">✗ Issue Detected</span>
+                            Server is running but not serving HTML correctly
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="test-item fail">
+                        <span class="status error">✗ Server Not Running</span>
+                        ${error.message}
+                        <br><br>
+                        <strong>Solution:</strong> Run <code>node server.js</code> in the server folder
+                    </div>
+                `;
+            }
+        }
+
+        async function testAPIs() {
+            const resultsDiv = document.getElementById('api-results');
+            resultsDiv.innerHTML = '<div class="test-item">Testing API endpoints...</div>';
+            
+            const endpoints = [
+                { url: '/api/admin/login', method: 'POST', name: 'Login API' },
+                { url: '/api/newsletter', method: 'POST', name: 'Newsletter API' },
+                { url: '/api/career', method: 'POST', name: 'Career API' },
+                { url: '/api/builder-inquiry', method: 'POST', name: 'Builder Inquiry API' }
+            ];
+            
+            let results = [];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch('http://localhost:3000' + endpoint.url, {
+                        method: endpoint.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+                    
+                    // We expect 400 for missing fields, which means API is working
+                    if (response.status === 400 || response.status === 401) {
+                        results.push(`
+                            <div class="test-item pass">
+                                <span class="status success">✓</span>
+                                ${endpoint.name} - Working (Status: ${response.status})
+                            </div>
+                        `);
+                    } else {
+                        results.push(`
+                            <div class="test-item fail">
+                                <span class="status warning">⚠</span>
+                                ${endpoint.name} - Unexpected status: ${response.status}
+                            </div>
+                        `);
+                    }
+                } catch (error) {
+                    results.push(`
+                        <div class="test-item fail">
+                            <span class="status error">✗</span>
+                            ${endpoint.name} - Failed: ${error.message}
+                        </div>
+                    `);
+                }
+            }
+            
+            resultsDiv.innerHTML = results.join('');
+        }
+
+        document.getElementById('test-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('test-password').value;
+            const resultDiv = document.getElementById('login-result');
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'admin@bluecrumbs.com',
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="test-item pass">
+                            <span class="status success">✓ Login Successful!</span>
+                            Token received. You can now access the dashboard.
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="test-item fail">
+                            <span class="status error">✗ Login Failed</span>
+                            ${data.error || 'Invalid credentials'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="test-item fail">
+                        <span class="status error">✗ Error</span>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        });
+
+        // Auto-check server on load
+        window.onload = () => {
+            checkServer();
+        };
+    </script>
+</body>
+</html>

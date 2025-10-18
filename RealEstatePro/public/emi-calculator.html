@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Loan EMI Calculator | BlueCrumbs</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Modern EMI Calculator Styling -->
+  <style>
+    /* EMI Calculator specific styling */
+    .emi-calculator-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+      margin-bottom: 60px;
+    }
+
+    .emi-calculator-wrapper .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      padding: 25px;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .emi-calculator-wrapper .card h3 {
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      color: #0d2c54;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .emi-calculator-wrapper .form-group {
+      margin-bottom: 15px;
+    }
+
+    .emi-calculator-wrapper .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .emi-calculator-wrapper .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .emi-results h4 {
+      margin: 15px 0 5px;
+      font-weight: 600;
+      color: #0d2c54;
+    }
+
+    .emi-amount {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f7b801;
+      margin-bottom: 20px;
+    }
+
+    .emi-breakdown div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Placeholder -->
+  <div id="header-placeholder"></div>
+
+  <!-- Main Content -->
+  <main class="page-content container">
+    <h1 class="page-title">Home Loan EMI Calculator</h1>
+
+    <div class="emi-calculator-wrapper">
+      <!-- Input Card -->
+      <div class="card emi-inputs">
+        <h3><i class="fa-solid fa-sliders-h"></i> Enter Details</h3>
+        <div class="form-group">
+          <label for="loanAmount">Loan Amount (₹)</label>
+          <input type="number" id="loanAmount" value="5000000">
+        </div>
+        <div class="form-group">
+          <label for="interestRate">Interest Rate (%)</label>
+          <input type="number" id="interestRate" step="0.05" value="8.5">
+        </div>
+        <div class="form-group">
+          <label for="loanTenure">Loan Tenure (Years)</label>
+          <input type="number" id="loanTenure" value="20">
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="card emi-results">
+        <h3><i class="fa-solid fa-chart-line"></i> Result</h3>
+        <h4>Your Monthly EMI</h4>
+        <p id="emiResult" class="emi-amount">₹ 0</p>
+
+        <div class="emi-breakdown">
+          <div>
+            <span>Principal Amount</span>
+            <strong id="principalAmount">₹ 0</strong>
+          </div>
+          <div>
+            <span>Total Interest</span>
+            <strong id="totalInterest">₹ 0</strong>
+          </div>
+          <div>
+            <span>Total Payment</span>
+            <strong id="totalPayment">₹ 0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Floating Call Button -->
+  <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry"><i class="fas fa-phone-alt"></i></button>
+
+  <!-- Quick Enquiry Popup -->
+  <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content">
+      <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+      <h3>Need Help?<br/>Get a quick call back.</h3>
+      <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter Name" required aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Enter Phone" required maxlength="10" aria-label="Your Phone Number" />
+        </div>
+        <input type="hidden" name="source" value="EMI Calculator Page Quick Popup" />
+        <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toaster" role="status" aria-live="polite"></div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="js/form-handler.js"></script>
+
+  <!-- Main JS -->
+  <script>
+    $(document).ready(function () {
+      // --- Load header and footer dynamically ---
+      $('#header-placeholder').load('templates/header.html', function () {
+        initializeHeaderSidebar();
+      });
+      $('#footer-placeholder').load('templates/footer.html');
+
+      // --- EMI Calculation ---
+      const loanAmountInput = $('#loanAmount');
+      const interestRateInput = $('#interestRate');
+      const loanTenureInput = $('#loanTenure');
+
+      function calculateEMI() {
+        const P = parseFloat(loanAmountInput.val());
+        const R = parseFloat(interestRateInput.val()) / 1200;
+        const N = parseFloat(loanTenureInput.val()) * 12;
+        if(P > 0 && R >= 0 && N > 0){
+          const emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+          const totalPayment = emi * N;
+          const totalInterest = totalPayment - P;
+          const formatCurrency = num => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(num);
+          $('#emiResult').text(formatCurrency(emi));
+          $('#principalAmount').text(formatCurrency(P));
+          $('#totalInterest').text(formatCurrency(totalInterest));
+          $('#totalPayment').text(formatCurrency(totalPayment));
+        }
+      }
+
+      calculateEMI();
+      $('#loanAmount, #interestRate, #loanTenure').on('input', calculateEMI);
+
+      // --- Header & Sidebar JS ---
+      function initializeHeaderSidebar() {
+        // open sidebar
+        $(document).on('click', '#sidebar-toggle', function () {
+          $('#sidebar').addClass('active').attr('aria-hidden', 'false');
+          $('.sidebar-overlay').addClass('active');
+          $('#sidebar-toggle').attr('aria-expanded', 'true');
+          $('body').css('overflow', 'hidden');
+        });
+
+        // close sidebar
+        $(document).on('click', '#sidebar-close, .sidebar-overlay', function () {
+          $('#sidebar').removeClass('active').attr('aria-hidden', 'true');
+          $('.sidebar-overlay').removeClass('active');
+          $('#sidebar-toggle').attr('aria-expanded', 'false');
+          $('body').css('overflow', '');
+        });
+
+        // submenu toggle
+        $(document).on('click', '.submenu-toggle', function (e) {
+          e.preventDefault();
+          const parent = $(this).closest('.has-submenu');
+          parent.toggleClass('open');
+          $(this).attr('aria-expanded', parent.hasClass('open') ? 'true' : 'false');
+        });
+
+        // keyboard support for hamburger
+        $(document).on('keydown', '#sidebar-toggle', function (e) {
+          if(e.key === 'Enter' || e.key === ' '){
+            $(this).click();
+            e.preventDefault();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

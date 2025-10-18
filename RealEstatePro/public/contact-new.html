@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | BlueCrumbs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <div class="container breadcrumb-wrapper">
+    <i class="fa-solid fa-phone breadcrumb-img" style="font-size: 35px; color: #6b7280;"></i>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a> > Contact Us
+    </div>
+  </div>
+
+  <main class="container my-4">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="contact-info">
+          <h4 class="section-title">Company Information</h4>
+          <p><strong>Company Name:</strong> BlueCrumbs Real Estate</p>
+          <p><strong>Email:</strong> info@bluecrumbs.com</p>
+          <p><strong>Phone:</strong> +91-87979-94437</p>
+          <p><strong>Address:</strong> Sector 62, Noida, Uttar Pradesh, India</p>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="contact-form">
+          <h4 class="section-title">Enquiry Form</h4>
+          <form id="contact-form">
+            <input type="text" class="form-control" name="name" placeholder="Enter Full Name" required>
+            <input type="email" class="form-control" name="email" placeholder="Enter Email" required>
+            <input type="tel" class="form-control" name="phone" placeholder="Enter Phone" required maxlength="10">
+            <textarea class="form-control" rows="4" name="message" placeholder="Tell us about your property requirements..."></textarea>
+            <input type="hidden" name="source" value="Contact Page Form" />
+            <button type="submit" class="btn-submit">Submit Property Enquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <h4 class="section-title">Our Office Location</h4>
+        <p>Our real estate office is strategically located in Sector 62, Noida, providing easy access to all major property locations in Noida and Greater Noida.</p>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <h4 class="section-title">Find Us on Google Map</h4>
+        <iframe class="contact-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.902065378982!2d90.41251871537403!3d23.81033189459882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b0643a1c8b%3A0x7b0c4c6f8d59b0aa!2sDhaka%2C%20Bangladesh!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Floating Call Button -->
+  <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry" aria-expanded="false">
+    <i class="fas fa-phone-alt"></i>
+  </button>
+
+  <!-- Quick Enquiry Popup -->
+  <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content">
+      <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+      <h3>Need Help?<br/>Get a quick call back.</h3>
+      <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter Name" required aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Enter Phone" required aria-label="Your Phone Number" maxlength="10" />
+        </div>
+        <input type="hidden" name="source" value="Contact Page Quick Popup" />
+        <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toaster" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      // Load header & footer
+      $('#header-placeholder').load('templates/header.html', function() {
+        initializeHeaderSidebar();
+      });
+      $('#footer-placeholder').load('templates/footer.html');
+    });
+
+    function initializeHeaderSidebar() {
+      // Initialize header sidebar if needed
+    }
+  </script>
+  
+  <!-- Include the form handler -->
+  <script src="js/form-handler.js"></script>
+</body>
+</html>

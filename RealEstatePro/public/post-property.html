@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post Property | BlueCrumbs</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* Post Property specific styles */
+    .post-property-hero {
+      background: linear-gradient(rgba(13, 44, 84, 0.85), rgba(13, 44, 84, 0.85)),
+        url("https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80") center/cover no-repeat;
+      padding: 100px 0 80px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .post-property-hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .post-property-hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .property-form {
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+    }
+
+    .property-form h3 {
+      color: #0d2c54;
+      font-weight: 600;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      color: #0d2c54;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #f7b801;
+      box-shadow: 0 0 8px rgba(247,184,1,0.3);
+      outline: none;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: #f7b801;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+      background: #e0a600;
+      transform: translateY(-2px);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .benefit-card {
+      background: #f8f9fb;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .benefit-card i {
+      font-size: 2rem;
+      color: #f7b801;
+      margin-bottom: 15px;
+    }
+
+    .benefit-card h4 {
+      color: #0d2c54;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Hero Section -->
+  <section class="post-property-hero">
+    <div class="container">
+      <h1>Post Your Property</h1>
+      <p>List your property with BlueCrumbs and reach thousands of potential buyers</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container my-5">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="property-form">
+          <h3><i class="fa-solid fa-plus-circle"></i> Property Details</h3>
+          <form id="property-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="propertyType">Property Type *</label>
+                  <select id="propertyType" required>
+                    <option value="">Select Property Type</option>
+                    <option value="apartment">Apartment</option>
+                    <option value="villa">Villa</option>
+                    <option value="plot">Plot</option>
+                    <option value="commercial">Commercial</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="propertyStatus">Property Status *</label>
+                  <select id="propertyStatus" required>
+                    <option value="">Select Status</option>
+                    <option value="ready-to-move">Ready to Move</option>
+                    <option value="under-construction">Under Construction</option>
+                    <option value="new-launch">New Launch</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="location">Location *</label>
+                  <input type="text" id="location" placeholder="Enter location" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="price">Price (₹) *</label>
+                  <input type="number" id="price" placeholder="Enter price" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="bedrooms">Bedrooms</label>
+                  <select id="bedrooms">
+                    <option value="">Select</option>
+                    <option value="1">1 BHK</option>
+                    <option value="2">2 BHK</option>
+                    <option value="3">3 BHK</option>
+                    <option value="4">4 BHK</option>
+                    <option value="5+">5+ BHK</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="area">Area (sq ft)</label>
+                  <input type="number" id="area" placeholder="Enter area">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="furnishing">Furnishing</label>
+                  <select id="furnishing">
+                    <option value="">Select</option>
+                    <option value="furnished">Furnished</option>
+                    <option value="semi-furnished">Semi Furnished</option>
+                    <option value="unfurnished">Unfurnished</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Property Description</label>
+              <textarea id="description" placeholder="Describe your property..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="amenities">Amenities</label>
+              <textarea id="amenities" placeholder="List amenities (e.g., Swimming Pool, Gym, Parking, etc.)"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="ownerName">Owner Name *</label>
+                  <input type="text" id="ownerName" placeholder="Enter your name" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="contactNumber">Contact Number *</label>
+                  <input type="tel" id="contactNumber" placeholder="Enter contact number" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="Enter email address">
+            </div>
+
+            <button type="submit" class="btn-submit">
+              <i class="fa-solid fa-paper-plane"></i> Submit Property
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <i class="fa-solid fa-eye"></i>
+            <h4>Maximum Visibility</h4>
+            <p>Your property will be seen by thousands of potential buyers</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fa-solid fa-handshake"></i>
+            <h4>Expert Support</h4>
+            <p>Our team will help you with the entire selling process</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fa-solid fa-shield-check"></i>
+            <h4>Verified Listings</h4>
+            <p>All properties are verified for authenticity and quality</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fa-solid fa-mobile-alt"></i>
+            <h4>Mobile Friendly</h4>
+            <p>Your listing will be optimized for mobile viewing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Floating Call Button -->
+  <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry"><i class="fas fa-phone-alt"></i></button>
+
+  <!-- Quick Enquiry Popup -->
+  <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content">
+      <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+      <h3>Need Help?<br/>Get a quick call back.</h3>
+      <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter Name" required aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Enter Phone" required maxlength="10" aria-label="Your Phone Number" />
+        </div>
+        <input type="hidden" name="source" value="Post Property Page Quick Popup" />
+        <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toaster" role="status" aria-live="polite"></div>
+
+  <!-- jQuery & Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/form-handler.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      // Load header & footer
+      $('#header-placeholder').load('templates/header.html', function() {
+        initializeHeaderSidebar();
+      });
+      $('#footer-placeholder').load('templates/footer.html');
+
+      // Property form submit
+      $('#property-form').on('submit', function(e){
+        e.preventDefault();
+        showToaster('Thank you for posting your property! Our team will contact you soon.', 'success');
+        $(this)[0].reset();
+      });
+
+      // Sidebar
+      function initializeHeaderSidebar(){
+        $(document).on('click', '#sidebar-toggle', function () {
+          $('#sidebar').addClass('active').attr('aria-hidden','false');
+          $('.sidebar-overlay').addClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','true');
+          $('body').css('overflow','hidden');
+        });
+        $(document).on('click', '#sidebar-close, .sidebar-overlay', function () {
+          $('#sidebar').removeClass('active').attr('aria-hidden','true');
+          $('.sidebar-overlay').removeClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','false');
+          $('body').css('overflow','');
+        });
+        $(document).on('click', '.submenu-toggle', function(e){
+          e.preventDefault();
+          const parent = $(this).closest('.has-submenu');
+          parent.toggleClass('open');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

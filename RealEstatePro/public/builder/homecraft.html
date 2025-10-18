@@ -1,0 +1,1011 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Homecraft Group | BlueCrumbs Real Estate</title>
+  <meta name="description" content="Explore premium projects by Homecraft Group. Quality residential and commercial properties in prime locations." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    /* Builder Page Styles - RealtyDart Inspired */
+    body {
+      padding-top: 70px;
+    }
+    .breadcrumb-wrapper {
+      background: linear-gradient(135deg, #0d2c54 0%, #1a4d8f 100%);
+      padding: 40px 0 30px;
+      text-align: center;
+      color: #fff;
+    }
+    .breadcrumb-wrapper h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .breadcrumb-wrapper .rera-number {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 12px;
+      color: #f7b801;
+    }
+    .breadcrumb-wrapper .breadcrumb {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      background: none;
+      padding: 0;
+      margin: 0;
+    }
+    .breadcrumb-wrapper .breadcrumb li {
+      font-size: 1.1rem;
+      color: #f7b801;
+    }
+    .breadcrumb-wrapper .breadcrumb li a {
+      color: #fff;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .breadcrumb-wrapper .breadcrumb li a:hover {
+      color: #f7b801;
+    }
+    .breadcrumb-wrapper .breadcrumb li + li::before {
+      content: "ï¿½";
+      color: #f7b801;
+      margin: 0 8px;
+    }
+    .builder-info-section {
+      padding: 40px 0;
+      background: #f8f9fb;
+    }
+    .builder-logo-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .builder-logo-large {
+      max-width: 200px;
+      height: 120px;
+      object-fit: contain;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 15px;
+      background: #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+    .about-builder h2 {
+      color: #0d2c54;
+      font-weight: 700;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    .about-builder p {
+      color: #4b5563;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 25px;
+      margin: 40px 0;
+    }
+    .stat-card {
+      background: #fff;
+      padding: 30px 20px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f7b801, #e0a600);
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-card h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #f7b801, #e0a600);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-card p {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .projects-section {
+      background: #fff;
+      padding: 50px 0;
+    }
+    .section-title {
+      text-align: center;
+      color: #0d2c54;
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    .section-subtitle {
+      text-align: center;
+      color: #6b7280;
+      font-size: 1.1rem;
+      margin-bottom: 50px;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+    .project-card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e5e7eb;
+    }
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+      border-color: #f7b801;
+    }
+    .project-image {
+      height: 280px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-image::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+    .project-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #f7b801;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    .project-content {
+      padding: 28px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-content h3 {
+      color: #0d2c54;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .project-location {
+      color: #6b7280;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .project-location i {
+      color: #f7b801;
+      font-size: 1.1rem;
+    }
+    .project-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .feature-item {
+      background: linear-gradient(135deg, #f8f9fb 0%, #e5e7eb 100%);
+      padding: 8px 16px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      color: #0d2c54;
+      font-weight: 600;
+      border: 1px solid #d1d5db;
+    }
+    .project-price {
+      color: #f7b801;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      margin-top: auto;
+    }
+    .project-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #f7b801 0%, #e0a600 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(247, 184, 1, 0.3);
+    }
+    .project-btn:hover {
+      background: linear-gradient(135deg, #e0a600 0%, #c79500 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(247, 184, 1, 0.4);
+    }
+    
+    /* Enquiry Form Section */
+    .enquiry-form-section {
+      background: linear-gradient(135deg, #f8f9fb 0%, #e8f4f8 100%);
+      padding: 60px 0;
+      position: relative;
+    }
+    .enquiry-form-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #0d2c54;
+    }
+    .enquiry-form-section p {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      color: #6b7280;
+    }
+    .enquiry-form-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      max-width: 700px;
+      margin: 0 auto;
+      border: 2px solid #f7b801;
+      position: relative;
+    }
+    .enquiry-form-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #f7b801, #e0a600);
+      border-radius: 20px;
+      z-index: -1;
+      opacity: 0.3;
+    }
+    .enquiry-form-card h3 {
+      color: #0d2c54;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .enquiry-form-card .form-group {
+      margin-bottom: 25px;
+    }
+    .enquiry-form-card label {
+      color: #0d2c54;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 1rem;
+    }
+    .enquiry-form-card input,
+    .enquiry-form-card textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+    }
+    .enquiry-form-card input:focus,
+    .enquiry-form-card textarea:focus {
+      border-color: #f7b801;
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(247, 184, 1, 0.1);
+    }
+    .enquiry-form-card textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #f7b801 0%, #e0a600 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 6px 20px rgba(247, 184, 1, 0.3);
+    }
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #e0a600 0%, #c79500 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(247, 184, 1, 0.4);
+    }
+    
+    /* Footer Call Icon */
+    .footer-contact li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .footer-contact li i {
+      width: 36px;
+      height: 36px;
+      background: #f7b801;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    @media (max-width: 768px) {
+      .builder-header h1 {
+        font-size: 2rem;
+      }
+      .section-title {
+        font-size: 2rem;
+      }
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+      .enquiry-form-card {
+        padding: 30px 25px;
+      }
+      .builder-logo-large {
+        max-width: 200px;
+      }
+    }
+      /* Floating Button Styles */
+    .floating-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #f7b801 0%, #e0a600 100%);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* Enquiry Popup Styles */
+    .enquiry-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .popup-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 400px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .close-popup {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 28px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+    .close-popup:hover {
+      color: #333;
+    }
+    .popup-content h3 {
+      color: #0d2c54;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .popup-content .form-group {
+      margin-bottom: 15px;
+    }
+    .popup-content input,
+    .popup-content textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .popup-content button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #f7b801 0%, #e0a600 100%);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .popup-content button[type="submit"]:hover {
+      background: linear-gradient(135deg, #e0a600 0%, #c79500 100%);
+    }
+</style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <!-- Career-style Breadcrumb Hero -->
+  <section class="breadcrumb-wrapper">
+    <div class="container">
+      <h1>Homecraft Group</h1>
+      <p class="rera-number">RERA NO: UPRERAPRJ2345</p>
+      <ul class="breadcrumb">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/builders.html">Builders</a></li>
+        <li>Homecraft Group</li>
+      </ul>
+    </div>
+  </section>
+
+  <main>
+    <!-- Builder Info Section -->
+    <section class="builder-info-section">
+      <div class="container">
+        <div class="builder-logo-container">
+          <img src="../images/builders/homecraft.png" alt="Homecraft Group Logo" class="builder-logo-large" onerror="this.onerror=null;this.src='/images/logo.png';">
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>13+</h3>
+            <p>Years Experience</p>
+          </div>
+          <div class="stat-card">
+            <h3>24+</h3>
+            <p>Active Projects</p>
+          </div>
+          <div class="stat-card">
+            <h3>14,000+</h3>
+            <p>Happy Families</p>
+          </div>
+          <div class="stat-card">
+            <h3>3+</h3>
+            <p>Cities</p>
+          </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about-builder">
+          <h2>About Homecraft Group</h2>
+          <p>Homecraft Group is a leading real estate developer known for delivering world-class residential and commercial projects. With a strong commitment to innovation, sustainability, and customer satisfaction, Homecraft Group has established itself as a trusted brand in the real estate industry.</p>
+          <p>The company focuses on creating sustainable and modern spaces that enhance the quality of life for residents. Their projects are strategically located in prime areas and are designed with modern amenities, excellent infrastructure, and attention to detail.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects-section">
+      <div class="container">
+        <h2 class="section-title">Homecraft Group Projects</h2>
+        <p class="section-subtitle">Explore our premium residential and commercial developments</p>
+        <div class="projects-grid">
+          <!-- Project 1 -->
+          <div class="project-card">
+            <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80');">
+              <span class="project-badge">Residential</span>
+            </div>
+            <div class="project-content">
+              <h3>Premium Residences</h3>
+              <div class="project-location">
+                <i class="fa-solid fa-location-dot"></i>
+                Sector 150, Noida
+              </div>
+              <div class="project-features">
+                <span class="feature-item">2 BHK</span>
+                <span class="feature-item">3 BHK</span>
+                <span class="feature-item">4 BHK</span>
+              </div>
+              <div class="project-price">â‚¹ 65 Lac - 1.5 Cr</div>
+              <button class="project-btn" onclick="contactUs()">View Details</button>
+            </div>
+          </div>
+          
+          <!-- Project 2 -->
+          <div class="project-card">
+            <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80');">
+              <span class="project-badge">Commercial</span>
+            </div>
+            <div class="project-content">
+              <h3>Business Hub</h3>
+              <div class="project-location">
+                <i class="fa-solid fa-location-dot"></i>
+                Sector 62, Noida
+              </div>
+              <div class="project-features">
+                <span class="feature-item">Office</span>
+                <span class="feature-item">Retail</span>
+                <span class="feature-item">Food Court</span>
+              </div>
+              <div class="project-price">â‚¹ 45 Lac - 2 Cr</div>
+              <button class="project-btn" onclick="contactUs()">View Details</button>
+            </div>
+          </div>
+          
+          <!-- Project 3 -->
+          <div class="project-card">
+            <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80');">
+              <span class="project-badge">Residential</span>
+            </div>
+            <div class="project-content">
+              <h3>Luxury Apartments</h3>
+              <div class="project-location">
+                <i class="fa-solid fa-location-dot"></i>
+                Greater Noida
+              </div>
+              <div class="project-features">
+                <span class="feature-item">3 BHK</span>
+                <span class="feature-item">4 BHK</span>
+                <span class="feature-item">Penthouse</span>
+              </div>
+              <div class="project-price">â‚¹ 1.2 Cr - 3 Cr</div>
+              <button class="project-btn" onclick="contactUs()">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View All Projects Button -->
+    <div class="text-center" style="margin-top: 40px; margin-bottom: 60px;">
+      <a href="/projects.html" class="btn btn-primary" style="padding: 12px 40px; font-size: 1.1rem; margin-right: 20px;">
+        <i class="fas fa-building"></i> View All Properties
+      </a>
+      <button onclick="openEnquiryPopup()" class="btn" style="background: linear-gradient(135deg, #f7b801 0%, #e0a600 100%); color: #0d2c54; padding: 12px 40px; font-size: 1.1rem; border: none; border-radius: 8px; font-weight: 600;">
+        <i class="fas fa-envelope"></i> Enquire Now
+      </button>
+    </div>
+    
+    <!-- Enquiry Form Section (Hidden by default) --><section class="enquiry-form-section" id="enquiry-section" style="display: none;">
+      <div class="container">
+        <h2 style="color: #0d2c54; font-size: 2.2rem;">If you like what you see, take a visit to see this project</h2>
+        <p style="color: #6b7280; font-size: 1.1rem;">Fill the form below for exclusive details and best offers</p>
+        
+        <div class="enquiry-form-card">
+          <h3>Enquire Now</h3>
+          <form id="builder-enquiry-form" method="POST">
+            <input type="hidden" name="builder_name" value="Homecraft Group">
+            
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required placeholder="Enter your email address">
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter your 10-digit phone number">
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us about your requirements (optional)"></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-paper-plane"></i> Submit Enquiry
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+
+  <div id="footer-placeholder"></div>
+
+  <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry"><i class="fas fa-phone-alt"></i></button>
+
+  <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="popup-content">
+      <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+      <h3>Need Help?<br/>Get a quick call back.</h3>
+      <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Enter Name" required pattern="[A-Za-z ]{2,50}" aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="Enter Phone" required pattern="[6-9][0-9]{9}" maxlength="10" aria-label="Your Phone Number" />
+        </div>
+        <input type="hidden" name="source" value="Instant Enquiry" />
+        <input type="hidden" name="builder_name" value="Homecraft Group" />
+        <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+      </form>
+    </div>
+  </div>
+
+    <!-- Main Enquiry Popup Modal -->
+  <div id="main-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true" style="display: none;">
+    <div class="popup-content" style="max-width: 500px;">
+      <button class="close-popup" onclick="closeMainEnquiryPopup()" aria-label="Close popup">&times;</button>
+      <h3>Get Exclusive Offers</h3>
+      <p style="color: #6b7280; margin-bottom: 20px;">Fill the form below for best deals on our projects</p>
+      <form id="main-popup-enquiry-form" aria-label="Main enquiry form">
+        <div class="form-group">
+          <input type="text" id="popup-name" name="name" placeholder="Enter Name" required pattern="[A-Za-z ]{2,50}" aria-label="Your Name" />
+        </div>
+        <div class="form-group">
+          <input type="email" id="popup-email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+        </div>
+        <div class="form-group">
+          <input type="tel" id="popup-phone" name="phone" placeholder="Enter Phone" required pattern="[6-9][0-9]{9}" maxlength="10" aria-label="Your Phone Number" />
+        </div>
+        <div class="form-group">
+          <textarea id="popup-message" name="message" placeholder="Tell us about your requirements (optional)" rows="3" aria-label="Your Message"></textarea>
+        </div>
+        <input type="hidden" name="source" value="Project Enquiry" />
+        <input type="hidden" name="builder_name" value="Homecraft Group" />
+        <button type="submit" class="btn btn-primary w-100">Submit Enquiry</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toaster" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/main.js"></script>
+  <script src="../js/form-handler.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      // Define sidebar initialization function FIRST
+      function initializeHeaderSidebar(){
+        $(document).on('click', '#sidebar-toggle', function () {
+          $('#sidebar').addClass('active').attr('aria-hidden','false');
+          $('.sidebar-overlay').addClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','true');
+          $('body').css('overflow','hidden');
+        });
+        $(document).on('click', '#sidebar-close, .sidebar-overlay', function () {
+          $('#sidebar').removeClass('active').attr('aria-hidden','true');
+          $('.sidebar-overlay').removeClass('active');
+          $('#sidebar-toggle').attr('aria-expanded','false');
+          $('body').css('overflow','');
+        });
+        $(document).on('click', '.submenu-toggle', function(e){
+          e.preventDefault();
+          const parent = $(this).closest('.has-submenu');
+          parent.toggleClass('open');
+        });
+      }
+      
+      // Load header & footer AFTER defining the function
+      $('#header-placeholder').load('../templates/header.html', function() {
+        console.log('Header loaded');
+        initializeHeaderSidebar();
+      });
+      $('#footer-placeholder').load('../templates/footer.html', function() {
+        console.log('Footer loaded');
+      });
+
+      // Builder enquiry form submission
+      $('#builder-enquiry-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+          builder_name: $('input[name="builder_name"]').val(),
+          name: $('#name').val().trim(),
+          email: $('#email').val().trim(),
+          phone: $('#phone').val().trim(),
+          message: $('#message').val().trim() || 'General inquiry about projects'
+        };
+        
+        // Validation
+        if (!formData.name || formData.name.length < 2) {
+          window.FormHandler.showToast('Please enter a valid name (minimum 2 characters)', true);
+          return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          window.FormHandler.showToast('Please enter a valid email address', true);
+          return;
+        }
+        
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          window.FormHandler.showToast('Please enter a valid 10-digit mobile number', true);
+          return;
+        }
+
+        $.ajax({
+          url: '/api/builder-inquiry',
+          method: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(response) {
+            window.FormHandler.showToast('Thank you for your interest! We will contact you soon.');
+            $('#builder-enquiry-form')[0].reset();
+            $('html, body').animate({ scrollTop: 0 }, 500);
+          },
+          error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+              window.FormHandler.showToast('You have already submitted an enquiry. We will contact you soon.', true);
+            } else {
+              window.FormHandler.showToast('There was an error submitting your enquiry. Please try again.', true);
+            }
+          }
+        });
+      });
+      
+      // Quick enquiry popup form submission
+      $('#popup-inquiry-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+          builder_name: $(this).find('input[name="builder_name"]').val(),
+          name: $(this).find('input[name="name"]').val().trim(),
+          email: $(this).find('input[name="email"]').val().trim(),
+          phone: $(this).find('input[name="phone"]').val().trim(),
+          message: 'Instant Enquiry - Request for immediate callback'
+        };
+        
+        // Validation
+        if (!formData.name || formData.name.length < 2) {
+          window.FormHandler.showToast('Please enter a valid name (minimum 2 characters)', true);
+          return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          window.FormHandler.showToast('Please enter a valid email address', true);
+          return;
+        }
+        
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          window.FormHandler.showToast('Please enter a valid 10-digit mobile number', true);
+          return;
+        }
+        
+        $.ajax({
+          url: '/api/builder-inquiry',
+          method: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(response) {
+            window.FormHandler.showToast('Thank you for your interest! We will contact you soon.');
+            $('#popup-inquiry-form')[0].reset();
+            $('#quick-enquiry-popup').attr('aria-hidden', 'true').hide();
+            $('body').css('overflow', '');
+          },
+          error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+              window.FormHandler.showToast('You have already submitted an enquiry. We will contact you soon.', true);
+            } else {
+              window.FormHandler.showToast('There was an error. Please try again.', true);
+            }
+          }
+        });
+      });
+      
+      // Floating enquiry button handler
+      $('#floating-enquiry-btn').on('click', function() {
+        $('#quick-enquiry-popup').attr('aria-hidden', 'false').show();
+        $('body').css('overflow', 'hidden');
+      });
+      
+      // Close popup button handler
+      $('#close-popup-btn').on('click', function() {
+        $('#quick-enquiry-popup').attr('aria-hidden', 'true').hide();
+        $('body').css('overflow', '');
+      });
+      
+      // Newsletter form submission handler
+      $(document).on('submit', '#newsletter-form-main', function(e) {
+        e.preventDefault();
+        
+        const email = $('#newsletter-email').val().trim();
+        const name = email.split('@')[0]; // Extract name from email
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          window.FormHandler.showToast('Please enter a valid email address', true);
+          return;
+        }
+        
+        // Send newsletter subscription to server
+        $.ajax({
+          url: '/api/newsletter',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ email: email, name: name, source: 'Newsletter Form' }),
+          success: function(response) {
+            window.FormHandler.showToast('Thank you for subscribing to our newsletter!');
+            $('#newsletter-form-main')[0].reset();
+          },
+          error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+              window.FormHandler.showToast('You are already subscribed to our newsletter.', true);
+            } else {
+              window.FormHandler.showToast('There was an error. Please try again later.', true);
+            }
+          }
+        });
+      });
+            // Main popup enquiry form submission
+      $('#main-popup-enquiry-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+          builder_name: $(this).find('input[name="builder_name"]').val(),
+          name: $('#popup-name').val().trim(),
+          email: $('#popup-email').val().trim(),
+          phone: $('#popup-phone').val().trim(),
+          message: $('#popup-message').val().trim() || 'General inquiry about projects'
+        };
+        
+        // Validation
+        if (!formData.name || formData.name.length < 2) {
+          window.FormHandler.showToast('Please enter a valid name (minimum 2 characters)', true);
+          return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          window.FormHandler.showToast('Please enter a valid email address', true);
+          return;
+        }
+        
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          window.FormHandler.showToast('Please enter a valid 10-digit mobile number', true);
+          return;
+        }
+        
+        $.ajax({
+          url: '/api/builder-inquiry',
+          method: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(response) {
+            window.FormHandler.showToast('Thank you for your interest! We will contact you soon.');
+            $('#main-popup-enquiry-form')[0].reset();
+            $('#main-enquiry-popup').attr('aria-hidden', 'true').hide();
+            $('body').css('overflow', '');
+          },
+          error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+              window.FormHandler.showToast('You have already submitted an enquiry. We will contact you soon.', true);
+            } else {
+              window.FormHandler.showToast('There was an error submitting your enquiry. Please try again.', true);
+            }
+          }
+        });
+      });
+      
+      // Close popup when clicking outside
+      $('.enquiry-popup').on('click', function(e) {
+        if (e.target === this) {
+          $(this).attr('aria-hidden', 'true').hide();
+          $('body').css('overflow', '');
+        }
+      });
+    });
+
+    function scrollToEnquiry() {
+      // Scroll to enquiry form
+      const target = $('#enquiry-section');
+      if (target.length) {
+        $('html, body').animate({
+          scrollTop: target.offset().top - 80
+        }, 800);
+      }
+    }
+    
+    function openEnquiryPopup() {
+      $('#main-enquiry-popup').attr('aria-hidden', 'false').show();
+      $('body').css('overflow', 'hidden');
+    }
+    
+    function closeMainEnquiryPopup() {
+      $('#main-enquiry-popup').attr('aria-hidden', 'true').hide();
+      $('body').css('overflow', '');
+    }
+    
+    function contactUs() {
+      openEnquiryPopup();
+    }
+  </script>
+</body>
+</html>

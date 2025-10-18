@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlueCrumbs | Find Your Dream Property</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="hero">
+            <div class="hero-inner container">
+                <div class="hero-text">
+                    <h1>Find Your Dream Property Today</h1>
+                    <p>Discover premium residential and commercial properties in Noida, Greater Noida, and surrounding areas with BlueCrumbs Real Estate.</p>
+                </div>
+                <div class="search-box">
+                    <ul class="nav-tabs" role="tablist">
+                        <li class="tab-link active" data-tab="residential" role="tab">Residential</li>
+                        <li class="tab-link" data-tab="commercial" role="tab">Commercial</li>
+                        <li class="tab-link" data-tab="industrial" role="tab">Industrial</li> </ul>
+                    <div id="residential" class="tab-content active" role="tabpanel">
+                        <form class="search-form" id="residential-search-form" aria-label="Residential search">
+                            <input type="text" id="res-location" placeholder="Enter location (e.g., Sector 150 Noida)" aria-label="Location" />
+                            <select id="res-bhk" aria-label="BHK Type">
+                                <option value="all" selected>All BHK Types</option>
+                                <option value="2 BHK">2 BHK</option>
+                                <option value="3 BHK">3 BHK</option>
+                                <option value="4 BHK">4 BHK</option>
+                                <option value="5 BHK">5 BHK</option>
+                            </select>
+                            <select id="res-builder" aria-label="Builder">
+                                <option value="all" selected>All Builders</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
+                    <div id="commercial" class="tab-content" role="tabpanel" aria-hidden="true">
+                        <form class="search-form" id="commercial-search-form" aria-label="Commercial search">
+                            <input type="text" id="com-location" placeholder="Enter location..." aria-label="Location" />
+                            <select id="com-type" aria-label="Property Type">
+                                <option value="all" selected>All Types</option>
+                                <option value="Office">Office Space</option>
+                                <option value="Retail">Retail Shop</option>
+                                <option value="Showroom">Showroom</option>
+                            </select>
+                            <select id="com-builder" aria-label="Builder">
+                                <option value="all" selected>All Builders</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
+                    <div id="industrial" class="tab-content" role="tabpanel" aria-hidden="true">
+                        <form class="search-form" aria-label="Industrial search">
+                            <input type="text" placeholder="Enter location..." aria-label="Location" />
+                            <select aria-label="Property Type"><option disabled selected>Property Type</option></select>
+                            <select aria-label="Budget"><option disabled selected>Budget</option></select>
+                            <button type="submit" class="btn btn-primary">Search <i class="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Results Section (Initially Hidden) -->
+        <section id="search-results-section" class="section container" style="display: none;">
+            <h2 class="section-title">Search Results</h2>
+            <div id="search-results-count" style="margin-bottom: 20px; color: #666;"></div>
+            <div id="search-results" class="properties-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Results will be populated here -->
+            </div>
+        </section>
+
+        <section class="section container">
+            <h2 class="section-title">Prime Locations We Cover</h2>
+            <div class="cities-grid">
+                <a href="./location/noida.html" class="city-card">
+                    <img src="https://www.realtydart.com/uploads/location/noida.png" alt="Noida">
+                    <span>Noida</span>
+                </a>
+                <a href="./location/gtnoida.html" class="city-card">
+                    <img src="https://www.realtydart.com/uploads/location/gurgaon_1582879483.png" alt="Greater Noida">
+                    <span>Greater Noida</span>
+                </a>
+                <a href="./location/noidaext.html" class="city-card">
+                    <img src="https://www.realtydart.com/uploads/location/noida.png">
+                    <span>Noida Extension</span>
+                </a>
+            </div>
+            <br>
+            <div class="cities-grid">
+                <a href="./location/dhulera.html" class="city-card">
+                    <img src="./images/dhulera.jpeg" alt="Dhulera">
+                    <span>Dhulera</span>
+                </a>
+                <a href="./location/Yaumnaexp.html" class="city-card">
+                    <img src="https://www.realtydart.com/uploads/location/gurgaon_1582879483.png" alt="Greater Noida">
+                    <span>Yamuna Expressway</span>
+                </a>
+                <a href="./location/Ghaziabad.html" class="city-card">
+                    <img src="./images/ghaziabad.png">
+                    <span>Ghaziabad</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="section bg-light">
+            <div class="container">
+                <h2 class="section-title">Our Real Estate Services</h2>
+                <div class="offer-grid">
+                    <div class="offer-card"><div class="icon-bg"><i class="fa-solid fa-house-chimney-user"></i></div><h5>Property Search</h5></div>
+                    <div class="offer-card"><div class="icon-bg"><i class="fa-solid fa-tags"></i></div><h5>Investment Opportunities</h5></div>
+                    <div class="offer-card"><div class="icon-bg"><i class="fa-solid fa-user-tie"></i></div><h5>Real Estate Consultant</h5></div>
+                    <div class="offer-card"><div class="icon-bg"><i class="fa-solid fa-hand-holding-dollar"></i></div><h5>Home Loan Assistance</h5></div>
+                    <div class="offer-card"><div class="icon-bg"><i class="fa-solid fa-file-signature"></i></div><h5>Property Documentation</h5></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container">
+            <h2 class="section-title">Featured Property Collections</h2>
+            <div class="tabs collection-tabs">
+                <button class="tab-button active" data-category="all">All</button>
+                <button class="tab-button" data-category="residential">Residential</button>
+                <button class="tab-button" data-category="commercial">Commercial</button>
+                <button class="tab-button" data-category="industrial">Industrial</button>
+            </div>
+            <div class="collection-grid">
+                <a href="#" class="collection-card collection-main" data-category="residential">
+                    <img src="https://www.realtydart.com/uploads/prop_status/new_launch_projects_-realty_dart_1597829529.jpg" alt="New Launch Projects">
+                    <div class="collection-overlay"><h3>New Launch Projects</h3></div>
+                </a>
+                <div class="collection-side">
+                    <a href="#" class="collection-card" data-category="residential"><img src="https://www.realtydart.com/uploads/prop_status/rtm_flats_realty_dart_1597830844.jpg" alt="Ready to Move"><div class="collection-overlay"><h4>Ready to Move</h4><p>5 Listings</p></div></a>
+                    <a href="#" class="collection-card" data-category="residential"><img src="https://www.realtydart.com/uploads/prop_status/villas_-realty_dart_1597829831.jpg" alt="Villas"><div class="collection-overlay"><h4>Villas / Plots</h4><p>0 Listings</p></div></a>
+                    <a href="#" class="collection-card" data-category="commercial"><img src="https://www.realtydart.com/uploads/prop_status/office_space_realty_dart_1597831014.jpg" alt="Office Space"><div class="collection-overlay"><h4>Office Space</h4><p>8 Listings</p></div></a>
+                    <a href="#" class="collection-card" data-category="commercial"><img src="https://www.realtydart.com/uploads/prop_status/retail_shops_icon_1597829432.jpg" alt="Retail Shops"><div class="collection-overlay"><h4>Retail Shops</h4><p>12 Listings</p></div></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-choose-us section">
+            <div class="container">
+                <h2 class="section-title">Why Choose Us</h2>
+                <div class="why-cards">
+                    <div class="why-card">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                        <h3>Trusted Experience</h3>
+                        <p>With years of experience in the real estate industry, we understand the market trends, property values, and legal procedures that help you make confident decisions.</p>
+                    </div>
+
+                    <div class="why-card">
+                        <i class="fa-solid fa-shield-heart"></i>
+                        <h3>Transparency & Integrity</h3>
+                        <p>We maintain complete transparency in all our dealings — from site visits to documentation — ensuring our clients always know what they’re getting.</p>
+                    </div>
+
+                    <div class="why-card">
+                        <i class="fa fa-building" aria-hidden="true"></i>
+                        <h3>Wide Property Portfolio</h3>
+                        <p>From luxury apartments and commercial spaces to affordable housing, we offer a diverse range of properties tailored to meet every budget and lifestyle.</p>
+                    </div>
+
+                    <div class="why-card">
+                        <i class="fa fa-handshake" aria-hidden="true"></i>
+                        <h3>Personalized Consultation</h3>
+                        <p>Our real estate experts guide you through every step — from property selection to registration — with dedicated one-on-one support.</p>
+                    </div>
+
+                    <div class="why-card">
+                        <i class="fa-solid fa-network-wired"></i>
+                        <h3>Wide  Strong Developer Network</h3>
+                        <p>We partner with leading and reputed builders, ensuring that every property we deal with meets the highest standards of quality and compliance.</p>
+                    </div>
+
+                    <div class="why-card">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <h3>End-to-End Support</h3>
+                        <p>From property search and site visits to financing, legal assistance, and post-sale services — we handle it all so you can enjoy a hassle-free experience</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container">
+            <h3 style="text-align: center; color: #555; font-weight: 500; margin-bottom: 5px; font-size: 1.2rem;">Authorised Channel Partner Of</h3>
+            <h2 class="section-title" style="margin-top: 0;">Trusted Real Estate Developers</h2>
+            <div class="owl-carousel builders-carousel owl-theme">
+                <div class="item"><a href="./builder/godrej.html" class="builder-card" aria-label="Godrej Group Logo" target="_blank"><img src="images/builders/godrej.jpg" alt="Godrej"></a></div>
+                <div class="item"><a href="./builder/ats.html" class="builder-card" aria-label="ATS Group Logo" target="_blank"><img src="images/builders/ats.jpg" alt="ATS"></a></div>
+                <div class="item"><a href="./builder/ace.html" class="builder-card" aria-label="ACE Group Logo" target="_blank"><img src="images/builders/ace.jpg" alt="Ace"></a></div>
+                <div class="item"><a href="./builder/max.html" class="builder-card" aria-label="MAX Group Logo" target="_blank"><img src="images/builders/max.jpg" alt="MAX"></a></div>
+                <div class="item"><a href="./builder/group108.html" class="builder-card" aria-label="Group 108 Logo" target="_blank"><img src="images/builders/group108.jpg" alt="Group 108"></a></div>
+                <div class="item"><a href="./builder/bhutani.html" class="builder-card" aria-label="Bhutani Group Logo" target="_blank"><img src="images/builders/bhutani.jpg" alt="Bhutani"></a></div>
+                <!-- <div class="item"><a href="https://www.jaypee.com/" class="builder-card" aria-label="Jaypee Group Logo" target="_blank"><img src="images/builders/jaypee.jpg" alt="Jaypee"></a></div> -->
+                <div class="item"><a href="./builder/crc.html" class="builder-card" aria-label="CRC Group Logo" target="_blank"><img src="images/builders/crc.jpg" alt="CRC"></a></div>
+                <div class="item"><a href="./builder/tata.html" class="builder-card" aria-label="TATA Housing Logo" target="_blank"><img src="images/builders/tata.jpg" alt="TATA"></a></div>
+                <div class="item"><a href="./builder/m3m.html" class="builder-card" aria-label="M3M Group Logo" target="_blank"><img src="images/builders/m3m.png" alt="M3M"></a></div>
+                <div class="item"><a href="./builder/eldeco.html" class="builder-card" aria-label="Eldeco Group Logo" target="_blank"><img src="images/builders/eldeco.png" alt="Eldeco"></a></div>
+                <div class="item"><a href="./builder/exotica.html" class="builder-card" aria-label="Exotica Group Logo" target="_blank"><img src="images/builders/exotica.jpg" alt="Exotica"></a></div>
+                <div class="item"><a href="./builder/l&t.html" class="builder-card" aria-label="L&t Group Logo" target="_blank"><img src="images/builders/l&t.jpg" alt="L&t"></a></div>
+                <div class="item"><a href="./builder/experion.html" class="builder-card" aria-label="Experion Group Logo" target="_blank"><img src="images/builders/experion.jpg" alt="Experion"></a></div>
+                <div class="item"><a href="./builder/fairfox.html" class="builder-card" aria-label="Fairfox Group Logo" target="_blank"><img src="images/builders/fairfox.webp" alt="Fairfox"></a></div>
+                <div class="item"><a href="./builder/gulshan.html" class="builder-card" aria-label="Gulshan Group Logo" target="_blank"><img src="images/builders/gulshan.jpg" alt="Gulshan"></a></div>
+                <div class="item"><a href="./builder/homecraft.html" class="builder-card" aria-label="Homecraft Group Logo" target="_blank"><img src="images/builders/homecraft.png" alt="Homecraft"></a></div>
+                <div class="item"><a href="./builder/kalptaru.html" class="builder-card" aria-label="
+                    Kalptaru Group Logo" target="_blank"><img src="images/builders/kalptaru.png" alt="kalptaru"></a></div>
+                <div class="item"><a href="./builder/prestige.html" class="builder-card" aria-label="Prestige Group Logo" target="_blank"><img src="images/builders/prestige.webp" alt="Prestige"></a></div>
+                <div class="item"><a href="./builder/steller.html" class="builder-card" aria-label="Staller Group Logo" target="_blank"><img src="images/builders/stellar.png" alt="Staller"></a></div>
+            </div>
+        </section>
+
+        <section class="testimonials-section">
+            <div class="container">
+                <div class="testimonial-card">
+                    <img src="https://www.realtydart.com/uploads/testimonial/test_2.jpg" alt="Mr. Ashutosh Kumar">
+                    <i class="fa-solid fa-quote-left quote-icon"></i>
+                    <p>"Highly professional personnel with excellent knowledge of the property market and procedures, humble and cooperative, clean dealings, and laudable behavior."</p>
+                    <h4>Mr. Ashutosh Kumar</h4>
+                    <span>Sr. Consultant</span>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="footer-placeholder"></div>
+
+    <button id="floating-enquiry-btn" class="floating-btn" aria-label="Quick enquiry"><i class="fas fa-phone-alt"></i></button>
+
+    <div id="quick-enquiry-popup" class="enquiry-popup" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="popup-content">
+        <button id="close-popup-btn" class="close-popup" aria-label="Close popup">&times;</button>
+        <h3>Need Help?<br/>Get a quick call back.</h3>
+        <form id="popup-inquiry-form" aria-label="Quick enquiry form">
+          <div class="form-group">
+            <input type="text" name="name" placeholder="Enter Name" required aria-label="Your Name" />
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="Enter Email" required aria-label="Your Email" />
+          </div>
+          <div class="form-group">
+            <input type="tel" name="phone" placeholder="Enter Phone" required maxlength="10" aria-label="Your Phone Number" />
+          </div>
+          <input type="hidden" name="source" value="Home Page Quick Popup" />
+          <button type="submit" class="btn btn-primary w-100">Request Call Back</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toaster" role="status" aria-live="polite"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/form-handler.js"></script>
+    <script src="js/property-search.js"></script>
