@@ -11,12 +11,18 @@
         const toaster = document.getElementById('toaster');
         if (!toaster) return;
         
+        // Clear any existing timer
+        if (toaster.timeoutId) {
+            clearTimeout(toaster.timeoutId);
+        }
+        
         toaster.textContent = message;
         toaster.className = 'toaster show ' + (isError ? 'error' : 'success');
         
-        // Auto-hide after 2 seconds instead of 5
-        setTimeout(() => {
-            toaster.classList.remove('show');
+        // Auto-hide after 2 seconds
+        toaster.timeoutId = setTimeout(() => {
+            toaster.classList.remove('show', 'error', 'success');
+            toaster.className = 'toaster'; // Reset to base class
         }, 2000);
     }
 

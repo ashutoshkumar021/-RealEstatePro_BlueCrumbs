@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard | BlueCrumbs Admin</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="apple-touch-icon" href="/images/logo.png">
+    <meta name="theme-color" content="#0d2c54">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/admin-style.css">
@@ -80,11 +85,15 @@
 <body>
     <div class="dashboard-layout">
         <aside class="sidebar">
-            <div class="sidebar-header"><span class="sidebar-logo">BlueCrumbs</span></div>
+            <div class="sidebar-header">
+                <img src="/images/logo.png" alt="BlueCrumbs Logo" class="sidebar-logo" style="max-height: 40px; width: auto;">
+                <span class="sidebar-logo-text">Admin Panel</span>
+            </div>
             <ul class="sidebar-menu">
                 <li class="menu-item active" data-tab="inquiries"><a href="#inquiries"><i class="fas fa-envelope-open-text"></i><span>Inquiries</span></a></li>
                 <li class="menu-item" data-tab="newsletter"><a href="#newsletter"><i class="fas fa-envelope"></i><span>Newsletter Subscribers</span></a></li>
                 <li class="menu-item" data-tab="builder"><a href="#builder"><i class="fas fa-building"></i><span>Builder Inquiries</span></a></li>
+                <li class="menu-item" data-tab="location"><a href="#location"><i class="fas fa-map-marker-alt"></i><span>Location Inquiries</span></a></li>
                 <li class="menu-item" data-tab="career"><a href="#career"><i class="fas fa-briefcase"></i><span>Career Submissions</span></a></li>
                 <li class="menu-item" data-tab="projects"><a href="#projects"><i class="fas fa-home"></i><span>Add Property</span></a></li>
             </ul>
@@ -105,6 +114,7 @@
                         <li><a href="#inquiries" class="mobile-nav-item" data-tab="inquiries"><i class="fas fa-envelope-open-text"></i> Inquiries</a></li>
                         <li><a href="#newsletter" class="mobile-nav-item" data-tab="newsletter"><i class="fas fa-envelope"></i> Newsletter Subscribers</a></li>
                         <li><a href="#builder" class="mobile-nav-item" data-tab="builder"><i class="fas fa-building"></i> Builder Inquiries</a></li>
+                        <li><a href="#location" class="mobile-nav-item" data-tab="location"><i class="fas fa-map-marker-alt"></i> Location Inquiries</a></li>
                         <li><a href="#career" class="mobile-nav-item" data-tab="career"><i class="fas fa-briefcase"></i> Career Submissions</a></li>
                         <li><a href="#projects" class="mobile-nav-item" data-tab="projects"><i class="fas fa-home"></i> Add Property</a></li>
                     </ul>
@@ -205,6 +215,31 @@
                                 </tr>
                             </thead>
                             <tbody id="builder-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Location Inquiries Tab -->
+                <div class="content-card tab-content" id="location-tab" style="display: none;">
+                    <h3 style="margin-bottom: 20px;">Location Inquiries</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Location</th>
+                                    <th>Property Type</th>
+                                    <th>Budget</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="location-table-body">
+                                <tr><td colspan="9">Loading...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>

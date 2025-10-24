@@ -54,7 +54,7 @@ function showToaster(message, type) {
     toaster.className = `show ${type}`;
     setTimeout(() => {
         toaster.className = toaster.className.replace('show', '');
-    }, 3000);
+    }, 2000);
 }
 
 // Password Reset Functionality

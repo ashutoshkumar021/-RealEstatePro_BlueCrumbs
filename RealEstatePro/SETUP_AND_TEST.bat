@@ -16,27 +16,21 @@ if not exist "node_modules" (
 )
 echo.
 
-echo [2/5] Setting up database...
-node setup-database.js
+echo [2/5] Setting up MongoDB database...
+cd server
+node setup-mongodb.js
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo ERROR: Database setup failed!
     echo Please check:
-    echo - MySQL is running
+    echo - MongoDB is running
     echo - Credentials in .env are correct
     pause
     exit /b 1
 )
 echo.
 
-echo [3/5] Testing database connection...
-node test-db.js
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo ERROR: Database test failed!
-    pause
-    exit /b 1
-)
+echo [3/5] Database setup complete!
 echo.
 
 echo [4/5] Checking for admin user...

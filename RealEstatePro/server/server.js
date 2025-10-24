@@ -1,22 +1,33 @@
-require('dotenv').config(); // Load environment variables FIRST
+require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const db = require('./db');
+const { connectDB, mongoose } = require('./mongodb');
 const mailer = require('./mailer');
+
+// Import all models
+const Admin = require('./models/Admin');
+const Inquiry = require('./models/Inquiry');
+const NewsletterSubscription = require('./models/NewsletterSubscription');
+const CareerSubmission = require('./models/CareerSubmission');
+const RealEstateProject = require('./models/RealEstateProject');
+const BuilderInquiry = require('./models/BuilderInquiry');
+const LocationInquiry = require('./models/LocationInquiry');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Connect to MongoDB
+connectDB();
+
 app.use(bodyParser.json());
 
 // Add CORS headers for API routes only
 app.use((req, res, next) => {
-    // Only set JSON content type for API routes, not HTML files
     if (req.path.startsWith('/api/')) {
         res.header('Content-Type', 'application/json');
     }
@@ -27,8 +38,8 @@ app.use((req, res, next) => {
 const publicPath = path.join(__dirname, '..', 'public');
 const adminPath = path.join(__dirname, '..', 'admin');
 
-app.use(express.static(publicPath)); // Serve public folder
-app.use('/admin', express.static(adminPath)); // Serve admin folder
+app.use(express.static(publicPath));
+app.use('/admin', express.static(adminPath));
 
 // Explicitly handle admin routes
 app.get('/admin/login.html', (req, res) => {
@@ -66,22 +77,25 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+// =========================================================================
+// ADMIN AUTHENTICATION ENDPOINTS
+// =========================================================================
+
 // Admin Login
 app.post('/admin/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        const result = await db.query('SELECT * FROM admins WHERE email = ?', [email]);
-        const user = result[0][0];
+        const user = await Admin.findOne({ email });
 
         if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-        // Check if user has a password set
         if (!user.password) {
             return res.status(401).json({ error: 'Password not set. Please reset your password.' });
         }
 
-        if (await bcrypt.compare(password, user.password)) {
-            const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        const isMatch = await user.comparePassword(password);
+        if (isMatch) {
+            const accessToken = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
             res.json({ token: accessToken, message: 'Login successful' });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
@@ -96,18 +110,17 @@ app.post('/admin/login', async (req, res) => {
 app.post('/api/admin/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        const result = await db.query('SELECT * FROM admins WHERE email = ?', [email]);
-        const user = result[0][0];
+        const user = await Admin.findOne({ email });
 
         if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-        // Check if user has a password set
         if (!user.password) {
             return res.status(401).json({ error: 'Password not set. Please reset your password.' });
         }
 
-        if (await bcrypt.compare(password, user.password)) {
-            const accessToken = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        const isMatch = await user.comparePassword(password);
+        if (isMatch) {
+            const accessToken = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
             res.json({ token: accessToken, message: 'Login successful' });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
@@ -127,17 +140,13 @@ app.post('/api/admin/reset-password', async (req, res) => {
     }
     
     try {
-        // Check if admin exists
-        const [admin] = await db.query('SELECT id FROM admins WHERE email = ?', [email]);
-        if (!admin || admin.length === 0) {
+        const admin = await Admin.findOne({ email });
+        if (!admin) {
             return res.status(404).json({ error: 'Admin not found' });
         }
         
-        // Hash the new password
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        
-        // Update password
-        await db.query('UPDATE admins SET password = ? WHERE email = ?', [hashedPassword, email]);
+        admin.password = newPassword;
+        await admin.save();
         
         res.json({ success: true, message: 'Password reset successfully' });
     } catch (err) {
@@ -146,7 +155,10 @@ app.post('/api/admin/reset-password', async (req, res) => {
     }
 });
 
-// Newsletter subscription endpoint
+// =========================================================================
+// NEWSLETTER SUBSCRIPTION ENDPOINTS
+// =========================================================================
+
 app.post('/api/newsletter', async (req, res) => {
     const { email } = req.body;
     
@@ -154,167 +166,21 @@ app.post('/api/newsletter', async (req, res) => {
         return res.status(400).json({ error: 'Email is required' });
     }
     
-    try {
-        // Check if already subscribed
-        const [existing] = await db.query('SELECT id FROM newsletter_subscriptions WHERE email = ?', [email]);
-        if (existing && existing.length > 0) {
-            return res.status(409).json({ error: 'Already subscribed' });
-        }
-        
-        await db.query('INSERT INTO newsletter_subscriptions (email) VALUES (?)', [email]);
-        res.json({ success: true, message: 'Successfully subscribed to newsletter' });
-    } catch (err) {
-        console.error('Newsletter subscription error:', err);
-        res.status(500).json({ error: 'Failed to subscribe' });
-    }
-});
-
-// Career submission endpoint
-app.post('/api/career', async (req, res) => {
-    const { name, email, phone, position, experience, resume_url, cover_letter } = req.body;
-    
-    if (!name || !email || !phone || !position) {
-        return res.status(400).json({ error: 'Required fields missing' });
-    }
-    
-    try {
-        await db.query(
-            'INSERT INTO career_submissions (name, email, phone, position, experience, resume_url, cover_letter, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [name, email, phone, position, experience || null, resume_url || null, cover_letter || null, 'pending']
-        );
-        
-        // Send confirmation email
-        try {
-            await mailer.sendMail(
-                email,
-                'Application Received - BlueCrumbs',
-                `Dear ${name},\n\nThank you for applying for the ${position} position at BlueCrumbs. We have received your application and will review it shortly.\n\nBest regards,\nBlueCrumbs HR Team`,
-                `<h2>Application Received</h2><p>Dear ${name},</p><p>Thank you for applying for the <strong>${position}</strong> position at BlueCrumbs.</p><p>We have received your application and will review it shortly.</p><p>Best regards,<br>BlueCrumbs HR Team</p>`
-            );
-        } catch (emailErr) {
-            console.error('Email error:', emailErr);
-        }
-        
-        res.json({ success: true, message: 'Application submitted successfully' });
-    } catch (err) {
-        console.error('Career submission error:', err);
-        res.status(500).json({ error: 'Failed to submit application' });
-    }
-});
-
-// Admin API endpoints (protected)
-// Get newsletter subscriptions
-app.get('/api/admin/newsletter-subscriptions', authenticateToken, async (req, res) => {
-    try {
-        const [subscriptions] = await db.query('SELECT * FROM newsletter_subscriptions ORDER BY subscribed_at DESC');
-        res.json(subscriptions);
-    } catch (err) {
-        console.error('Error fetching subscriptions:', err);
-        res.status(500).json({ error: 'Failed to fetch subscriptions' });
-    }
-});
-
-// Delete newsletter subscription
-app.delete('/api/admin/newsletter-subscriptions/:id', authenticateToken, async (req, res) => {
-    try {
-        await db.query('DELETE FROM newsletter_subscriptions WHERE id = ?', [req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Error deleting subscription:', err);
-        res.status(500).json({ error: 'Failed to delete subscription' });
-    }
-});
-
-// Get builder inquiries
-app.get('/api/admin/builder-inquiries', authenticateToken, async (req, res) => {
-    try {
-        const [inquiries] = await db.query('SELECT * FROM builder_inquiries ORDER BY created_at DESC');
-        res.json(inquiries);
-    } catch (err) {
-        console.error('Error fetching builder inquiries:', err);
-        res.status(500).json({ error: 'Failed to fetch inquiries' });
-    }
-});
-
-// Delete builder inquiry
-app.delete('/api/admin/builder-inquiries/:id', authenticateToken, async (req, res) => {
-    try {
-        await db.query('DELETE FROM builder_inquiries WHERE id = ?', [req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Error deleting inquiry:', err);
-        res.status(500).json({ error: 'Failed to delete inquiry' });
-    }
-});
-
-// Get career submissions
-app.get('/api/admin/career-submissions', authenticateToken, async (req, res) => {
-    try {
-        const [submissions] = await db.query('SELECT * FROM career_submissions ORDER BY created_at DESC');
-        res.json(submissions);
-    } catch (err) {
-        console.error('Error fetching career submissions:', err);
-        res.status(500).json({ error: 'Failed to fetch submissions' });
-    }
-});
-
-// Update career submission status
-app.put('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
-    const { status } = req.body;
-    try {
-        await db.query('UPDATE career_submissions SET status = ? WHERE id = ?', [status, req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Error updating submission:', err);
-        res.status(500).json({ error: 'Failed to update submission' });
-    }
-});
-
-// Delete career submission
-app.delete('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
-    try {
-        await db.query('DELETE FROM career_submissions WHERE id = ?', [req.params.id]);
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Error deleting submission:', err);
-        res.status(500).json({ error: 'Failed to delete submission' });
-    }
-});
-
-// =========================================================================
-// NEWSLETTER SUBSCRIPTION ENDPOINT (Simplified - Email Only)
-// =========================================================================
-app.post('/api/newsletter', async (req, res) => {
-    const { email } = req.body;
-    
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
-    }
-    
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ error: 'Invalid email format' });
     }
 
     try {
-        // Check if already subscribed
-        const [existing] = await db.query(
-            'SELECT id FROM newsletter_subscriptions WHERE email = ?',
-            [email]
-        );
+        const existing = await NewsletterSubscription.findOne({ email });
         
-        if (existing && existing.length > 0) {
+        if (existing) {
             return res.status(409).json({ error: 'This email is already subscribed to our newsletter' });
         }
         
-        // New subscription - just save email
-        const result = await db.query(
-            'INSERT INTO newsletter_subscriptions (email) VALUES (?)',
-            [email]
-        );
+        const subscription = new NewsletterSubscription({ email });
+        await subscription.save();
         
-        // Send emails to user, company, and admin
         try {
             const emailResults = await mailer.sendFormEmails('newsletter', {
                 email: email,
@@ -327,7 +193,7 @@ app.post('/api/newsletter', async (req, res) => {
         
         res.status(201).json({ success: true, message: 'Successfully subscribed to newsletter!' });
     } catch (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
+        if (err.code === 11000) {
             return res.status(409).json({ error: 'This email is already subscribed' });
         }
         console.error('Database error in /api/newsletter:', err);
@@ -336,8 +202,82 @@ app.post('/api/newsletter', async (req, res) => {
 });
 
 // =========================================================================
-// REAL ESTATE PROJECTS SEARCH ENDPOINT
+// CAREER SUBMISSION ENDPOINTS
 // =========================================================================
+
+app.post('/api/career', async (req, res) => {
+    const { name, email, phone, position, experience, resume_url, cover_letter, message, resume } = req.body;
+    
+    if (!name || !email || !phone || !position) {
+        return res.status(400).json({ error: 'Required fields missing' });
+    }
+    
+    try {
+        // Check for existing application for the same position
+        const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const existingApplication = await CareerSubmission.findOne({
+            email: email.toLowerCase(),
+            position: position,
+            createdAt: { $gte: oneMonthAgo }
+        });
+
+        if (existingApplication) {
+            return res.status(409).json({ 
+                error: `You have already applied for the position of ${position} recently. We will review your application and contact you soon.` 
+            });
+        }
+        
+        // Check for any recent application (within 24 hours)
+        const oneDayAgoCheck = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const existingSubmission = await CareerSubmission.findOne({
+            email,
+            submitted_at: { $gte: oneDayAgoCheck }
+        });
+        
+        if (existingSubmission) {
+            return res.status(409).json({ error: 'You have already submitted an application recently. We will review it soon.' });
+        }
+        
+        const submission = new CareerSubmission({
+            name,
+            email,
+            phone,
+            position,
+            experience: experience || null,
+            resume_url: resume_url || resume || null,
+            cover_letter: cover_letter || message || null,
+            status: 'pending'
+        });
+        
+        await submission.save();
+        
+        try {
+            const emailResults = await mailer.sendFormEmails('career', {
+                name: name,
+                email: email,
+                phone: phone,
+                position: position,
+                experience: experience,
+                resume_path: resume_url || resume,
+                message: message || `Applied for: ${position}`,
+                urgent: false
+            });
+            console.log('Career application emails sent:', emailResults);
+        } catch (emailErr) {
+            console.error('Email error:', emailErr);
+        }
+        
+        res.status(201).json({ success: true, message: 'Application submitted successfully', id: submission._id });
+    } catch (err) {
+        console.error('Career submission error:', err);
+        res.status(500).json({ error: 'Failed to submit application' });
+    }
+});
+
+// =========================================================================
+// REAL ESTATE PROJECTS ENDPOINTS
+// =========================================================================
+
 app.get('/api/projects/search', async (req, res) => {
     try {
         const { 
@@ -351,51 +291,37 @@ app.get('/api/projects/search', async (req, res) => {
             searchTerm 
         } = req.query;
         
-        let query = 'SELECT * FROM real_estate_projects WHERE 1=1';
-        const params = [];
+        let query = {};
         
-        // Location filter
         if (location && location !== 'all') {
-            query += ' AND location LIKE ?';
-            params.push(`%${location}%`);
+            query.location = new RegExp(location, 'i');
         }
         
-        // BHK filter
         if (bhk && bhk !== 'all') {
-            query += ' AND bhk LIKE ?';
-            params.push(`%${bhk}%`);
+            query.bhk = new RegExp(bhk, 'i');
         }
         
-        // Builder filter
         if (builder && builder !== 'all') {
-            query += ' AND builder_name LIKE ?';
-            params.push(`%${builder}%`);
+            query.builder_name = new RegExp(builder, 'i');
         }
         
-        // Status filter
         if (status && status !== 'all') {
-            query += ' AND status_possession = ?';
-            params.push(status);
+            query.status_possession = status;
         }
         
-        // Project type filter
         if (projectType && projectType !== 'all') {
-            query += ' AND project_type = ?';
-            params.push(projectType);
+            query.project_type = projectType;
         }
         
-        // General search term (searches in project name, builder name, and location)
         if (searchTerm) {
-            query += ' AND (project_name LIKE ? OR builder_name LIKE ? OR location LIKE ?)';
-            params.push(`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`);
+            query.$or = [
+                { project_name: new RegExp(searchTerm, 'i') },
+                { builder_name: new RegExp(searchTerm, 'i') },
+                { location: new RegExp(searchTerm, 'i') }
+            ];
         }
         
-        // Price range filter (complex because prices are stored as strings with ₹ symbol)
-        // This would need more complex handling in production
-        
-        query += ' ORDER BY project_name ASC';
-        
-        const [results] = await db.query(query, params);
+        const results = await RealEstateProject.find(query).sort({ project_name: 1 });
         res.json(results);
         
     } catch (err) {
@@ -404,22 +330,20 @@ app.get('/api/projects/search', async (req, res) => {
     }
 });
 
-// Get all unique locations for dropdown
 app.get('/api/projects/locations', async (req, res) => {
     try {
-        const [results] = await db.query('SELECT DISTINCT location FROM real_estate_projects WHERE location IS NOT NULL ORDER BY location');
-        res.json(results.map(r => r.location));
+        const locations = await RealEstateProject.distinct('location');
+        res.json(locations.filter(loc => loc).sort());
     } catch (err) {
         console.error('Error fetching locations:', err);
         res.status(500).json({ error: 'Failed to fetch locations' });
     }
 });
 
-// Get all unique builders for dropdown
 app.get('/api/projects/builders', async (req, res) => {
     try {
-        const [results] = await db.query('SELECT DISTINCT builder_name FROM real_estate_projects WHERE builder_name IS NOT NULL ORDER BY builder_name');
-        res.json(results.map(r => r.builder_name));
+        const builders = await RealEstateProject.distinct('builder_name');
+        res.json(builders.filter(builder => builder).sort());
     } catch (err) {
         console.error('Error fetching builders:', err);
         res.status(500).json({ error: 'Failed to fetch builders' });
@@ -427,8 +351,85 @@ app.get('/api/projects/builders', async (req, res) => {
 });
 
 // =========================================================================
-// BUILDER INQUIRIES ENDPOINT
+// LOCATION INQUIRY ENDPOINTS
 // =========================================================================
+
+app.post('/api/location-inquiry', async (req, res) => {
+    const { name, email, phone, location_name, property_type, budget, message } = req.body;
+    
+    if (!name || !email || !phone || !location_name) {
+        return res.status(400).json({ error: 'Required fields missing' });
+    }
+    
+    try {
+        // Check for existing inquiry with same email/phone for this location (last 30 days)
+        const existingInquiry = await LocationInquiry.findOne({
+            $and: [
+                { location_name },
+                { $or: [
+                    { email: email.toLowerCase() },
+                    { phone: phone.replace(/\D/g, '') }
+                ]}
+            ],
+            createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
+        });
+
+        if (existingInquiry) {
+            return res.status(409).json({ 
+                error: 'You have already submitted an inquiry for this location. Our team will contact you soon.' 
+            });
+        }
+        
+        // Check for any recent inquiry from this user (last 24 hours)
+        const oneDayAgoCheck = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const existingInquiryCheck = await LocationInquiry.findOne({
+            $or: [{ email }, { phone }],
+            createdAt: { $gte: oneDayAgoCheck }
+        });
+        
+        if (existingInquiryCheck) {
+            return res.status(409).json({ error: 'You have already submitted an inquiry recently. We will contact you soon.' });
+        }
+        
+        const inquiry = new LocationInquiry({
+            name,
+            email,
+            phone,
+            location_name,
+            property_type: property_type || 'Any',
+            budget: budget || 'Not specified',
+            message: message || 'Interested in properties in ' + location_name
+        });
+        
+        await inquiry.save();
+        
+        try {
+            const emailResults = await mailer.sendFormEmails('location', {
+                name: name,
+                email: email,
+                phone: phone,
+                location_name: location_name,
+                property_type: property_type,
+                budget: budget,
+                message: message || 'Location inquiry',
+                urgent: false
+            });
+            console.log('Location inquiry emails sent:', emailResults);
+        } catch (emailErr) {
+            console.error('Email error:', emailErr);
+        }
+        
+        res.status(201).json({ success: true, message: 'Thank you for your interest! Our team will contact you soon.' });
+    } catch (err) {
+        console.error('Location inquiry error:', err);
+        res.status(500).json({ error: 'Failed to submit inquiry' });
+    }
+});
+
+// =========================================================================
+// BUILDER INQUIRY ENDPOINTS
+// =========================================================================
+
 app.post('/api/builder-inquiry', async (req, res) => {
     const { builder_name, name, email, phone, message } = req.body;
     
@@ -437,39 +438,41 @@ app.post('/api/builder-inquiry', async (req, res) => {
     }
     
     try {
-        // Check for duplicate submission (same email or phone in last 24 hours)
-        const [existing] = await db.query(
-            'SELECT id FROM builder_inquiries WHERE (email = ? OR phone = ?) AND created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)',
-            [email, phone]
-        );
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const existing = await BuilderInquiry.findOne({
+            $or: [{ email }, { phone }],
+            createdAt: { $gte: oneDayAgo }
+        });
         
-        if (existing && existing.length > 0) {
+        if (existing) {
             return res.status(409).json({ error: 'You have already submitted an inquiry recently. We will contact you soon.' });
         }
         
-        const finalMessage = message || 'General inquiry about projects';
-        const result = await db.query(
-            'INSERT INTO builder_inquiries (builder_name, name, email, phone, message) VALUES (?, ?, ?, ?, ?)',
-            [builder_name, name, email, phone, finalMessage]
-        );
+        const inquiry = new BuilderInquiry({
+            builder_name,
+            name,
+            email,
+            phone,
+            message: message || 'General inquiry about projects'
+        });
         
-        // Send emails to user, company, and admin
+        await inquiry.save();
+        
         try {
             const emailResults = await mailer.sendFormEmails('builder', {
                 name: name,
                 email: email,
                 phone: phone,
-                message: finalMessage,
+                message: message || 'General inquiry about projects',
                 builder_name: builder_name,
                 urgent: false
             });
             console.log('Builder inquiry emails sent:', emailResults);
         } catch (emailErr) {
             console.error('Email sending failed:', emailErr);
-            // Continue even if email fails
         }
         
-        res.status(201).json({ success: true, message: 'Builder inquiry submitted successfully', id: result[0].insertId });
+        res.status(201).json({ success: true, message: 'Builder inquiry submitted successfully', id: inquiry._id });
     } catch (err) {
         console.error('Database error in /api/builder-inquiry:', err);
         res.status(500).json({ error: 'Failed to submit builder inquiry' });
@@ -477,8 +480,9 @@ app.post('/api/builder-inquiry', async (req, res) => {
 });
 
 // =========================================================================
-// GENERAL INQUIRY ENDPOINT (for form-handler.js)
+// GENERAL INQUIRY ENDPOINT
 // =========================================================================
+
 app.post('/inquiry', async (req, res) => {
     const { name, email, phone, message, source } = req.body;
     
@@ -486,36 +490,38 @@ app.post('/inquiry', async (req, res) => {
         return res.status(400).json({ error: 'Missing required fields' });
     }
     
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ error: 'Invalid email format' });
     }
     
-    // Validate phone format (Indian mobile)
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
         return res.status(400).json({ error: 'Invalid phone number format' });
     }
     
     try {
-        // Check for duplicate inquiry
-        const [existing] = await db.query(
-            'SELECT id FROM inquiries WHERE email = ? AND phone = ? AND created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)',
-            [email, phone]
-        );
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const existing = await Inquiry.findOne({
+            email,
+            phone,
+            received_at: { $gte: oneDayAgo }
+        });
         
-        if (existing && existing.length > 0) {
+        if (existing) {
             return res.status(409).json({ error: 'You have already submitted an inquiry recently' });
         }
         
-        // Insert new inquiry
-        const [result] = await db.query(
-            'INSERT INTO inquiries (name, email, phone, message, source, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
-            [name, email, phone, message || '', source || 'Website Form']
-        );
+        const inquiry = new Inquiry({
+            name,
+            email,
+            phone,
+            message: message || '',
+            source: source || 'Website Form'
+        });
         
-        // Send emails to user, company, and admin
+        await inquiry.save();
+        
         try {
             const emailResults = await mailer.sendFormEmails('contact', {
                 name: name,
@@ -528,10 +534,9 @@ app.post('/inquiry', async (req, res) => {
             console.log('Contact form emails sent:', emailResults);
         } catch (emailErr) {
             console.error('Email sending failed:', emailErr);
-            // Continue even if email fails
         }
         
-        res.status(201).json({ success: true, message: 'Inquiry submitted successfully', id: result.insertId });
+        res.status(201).json({ success: true, message: 'Inquiry submitted successfully', id: inquiry._id });
     } catch (err) {
         console.error('Database error in /inquiry:', err);
         res.status(500).json({ error: 'Failed to submit inquiry' });
@@ -539,61 +544,53 @@ app.post('/inquiry', async (req, res) => {
 });
 
 // =========================================================================
-// ADMIN API: Inquiry Management (FIXED: Source added to select)
+// ADMIN API: Inquiry Management
 // =========================================================================
 
-// GET all inquiries
 app.get('/admin/inquiries', authenticateToken, async (req, res) => {
     try {
         const { search, startDate, endDate } = req.query;
-        let filterConditions = [];
+        let filter = {};
 
         if (search) {
-            const searchTerm = `%${search.toLowerCase()}%`;
-            filterConditions.push(
-                `(LOWER(name) LIKE '${searchTerm}' OR LOWER(email) LIKE '${searchTerm}' OR phone LIKE '${searchTerm}')`
-            );
+            filter.$or = [
+                { name: new RegExp(search, 'i') },
+                { email: new RegExp(search, 'i') },
+                { phone: new RegExp(search, 'i') }
+            ];
         }
 
         if (startDate) {
-            filterConditions.push(`received_at >= '${startDate}'`);
+            filter.received_at = filter.received_at || {};
+            filter.received_at.$gte = new Date(startDate);
         }
 
         if (endDate) {
-            // Add one day to endDate to include the whole day
+            filter.received_at = filter.received_at || {};
             const nextDay = new Date(endDate);
             nextDay.setDate(nextDay.getDate() + 1);
-            filterConditions.push(`received_at < '${nextDay.toISOString().split('T')[0]}'`);
+            filter.received_at.$lt = nextDay;
         }
         
-        const whereClause = filterConditions.length > 0 ? 'WHERE ' + filterConditions.join(' AND ') : '';
-
-        const queryText = `
-            SELECT id, name, email, phone, message, source, received_at -- ✅ SOURCE SELECTED HERE
-            FROM inquiries
-            ${whereClause}
-            ORDER BY received_at DESC
-        `;
-        
-        const result = await db.query(queryText);
-        res.json(result[0]);
+        const inquiries = await Inquiry.find(filter).sort({ received_at: -1 });
+        res.json(inquiries);
     } catch (err) {
         console.error('Error fetching inquiries:', err);
         res.status(500).json({ error: 'Failed to fetch inquiries' });
     }
 });
 
-
-// UPDATE an inquiry (FIXED: Source updated)
 app.put('/admin/inquiries/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
-    const { name, email, phone, message, source } = req.body; // ✅ SOURCE ADDED HERE
+    const { name, email, phone, message, source } = req.body;
     try {
-        const result = await db.query(
-            'UPDATE inquiries SET name = ?, email = ?, phone = ?, message = ?, source = ? WHERE id = ?',
-            [name, email, phone, message || null, source || 'Unknown', id]
+        const inquiry = await Inquiry.findByIdAndUpdate(
+            id,
+            { name, email, phone, message: message || null, source: source || 'Unknown' },
+            { new: true }
         );
-        if (result[0].affectedRows === 0) return res.status(404).json({ error: 'Inquiry not found' });
+        
+        if (!inquiry) return res.status(404).json({ error: 'Inquiry not found' });
         res.json({ success: true, message: 'Inquiry updated successfully' });
     } catch (err) {
         console.error('Error updating inquiry:', err);
@@ -601,12 +598,11 @@ app.put('/admin/inquiries/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// DELETE an inquiry
 app.delete('/admin/inquiries/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.query('DELETE FROM inquiries WHERE id = ?', [id]);
-        if (result[0].affectedRows === 0) return res.status(404).json({ error: 'Inquiry not found' });
+        const inquiry = await Inquiry.findByIdAndDelete(id);
+        if (!inquiry) return res.status(404).json({ error: 'Inquiry not found' });
         res.sendStatus(204);
     } catch (err) {
         console.error('Error deleting inquiry:', err);
@@ -614,61 +610,51 @@ app.delete('/admin/inquiries/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// =========================================================================
-// API ADMIN ROUTES (with /api/admin prefix for admin panel compatibility)
-// =========================================================================
-
-// GET all inquiries (API route)
+// API routes with /api/admin prefix
 app.get('/api/admin/inquiries', authenticateToken, async (req, res) => {
     try {
         const { search, startDate, endDate } = req.query;
-        let filterConditions = [];
+        let filter = {};
 
         if (search) {
-            const searchTerm = `%${search.toLowerCase()}%`;
-            filterConditions.push(
-                `(LOWER(name) LIKE '${searchTerm}' OR LOWER(email) LIKE '${searchTerm}' OR phone LIKE '${searchTerm}')`
-            );
+            filter.$or = [
+                { name: new RegExp(search, 'i') },
+                { email: new RegExp(search, 'i') },
+                { phone: new RegExp(search, 'i') }
+            ];
         }
 
         if (startDate) {
-            filterConditions.push(`created_at >= '${startDate}'`);
+            filter.createdAt = filter.createdAt || {};
+            filter.createdAt.$gte = new Date(startDate);
         }
 
         if (endDate) {
+            filter.createdAt = filter.createdAt || {};
             const nextDay = new Date(endDate);
             nextDay.setDate(nextDay.getDate() + 1);
-            filterConditions.push(`created_at < '${nextDay.toISOString().split('T')[0]}'`);
+            filter.createdAt.$lt = nextDay;
         }
         
-        const whereClause = filterConditions.length > 0 ? 'WHERE ' + filterConditions.join(' AND ') : '';
-
-        const queryText = `
-            SELECT id, name, email, phone, message, source, 
-                   created_at as received_at
-            FROM inquiries
-            ${whereClause}
-            ORDER BY created_at DESC
-        `;
-        
-        const result = await db.query(queryText);
-        res.json(result[0]);
+        const inquiries = await Inquiry.find(filter).sort({ createdAt: -1 });
+        res.json(inquiries);
     } catch (err) {
         console.error('Error fetching inquiries:', err);
         res.status(500).json({ error: 'Failed to fetch inquiries' });
     }
 });
 
-// UPDATE an inquiry (API route)
 app.put('/api/admin/inquiries/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { name, email, phone, message, source } = req.body;
     try {
-        const result = await db.query(
-            'UPDATE inquiries SET name = ?, email = ?, phone = ?, message = ?, source = ? WHERE id = ?',
-            [name, email, phone, message || null, source || 'Unknown', id]
+        const inquiry = await Inquiry.findByIdAndUpdate(
+            id,
+            { name, email, phone, message: message || null, source: source || 'Unknown' },
+            { new: true }
         );
-        if (result[0].affectedRows === 0) return res.status(404).json({ error: 'Inquiry not found' });
+        
+        if (!inquiry) return res.status(404).json({ error: 'Inquiry not found' });
         res.json({ success: true, message: 'Inquiry updated successfully' });
     } catch (err) {
         console.error('Error updating inquiry:', err);
@@ -676,12 +662,11 @@ app.put('/api/admin/inquiries/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// DELETE an inquiry (API route)
 app.delete('/api/admin/inquiries/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.query('DELETE FROM inquiries WHERE id = ?', [id]);
-        if (result[0].affectedRows === 0) return res.status(404).json({ error: 'Inquiry not found' });
+        const inquiry = await Inquiry.findByIdAndDelete(id);
+        if (!inquiry) return res.status(404).json({ error: 'Inquiry not found' });
         res.sendStatus(204);
     } catch (err) {
         console.error('Error deleting inquiry:', err);
@@ -690,8 +675,9 @@ app.delete('/api/admin/inquiries/:id', authenticateToken, async (req, res) => {
 });
 
 // =========================================================================
-// ADD PROPERTY ENDPOINT
+// ADMIN API: Property Management
 // =========================================================================
+
 app.post('/api/admin/properties', authenticateToken, async (req, res) => {
     const { 
         project_name, 
@@ -710,32 +696,37 @@ app.post('/api/admin/properties', authenticateToken, async (req, res) => {
     }
     
     try {
-        // Check for duplicate property
-        const [existing] = await db.query(
-            `SELECT id FROM real_estate_projects 
-             WHERE project_name = ? AND builder_name = ? AND location = ?`,
-            [project_name, builder_name, location]
-        );
+        const existing = await RealEstateProject.findOne({
+            project_name,
+            builder_name,
+            location
+        });
         
-        if (existing && existing.length > 0) {
+        if (existing) {
             return res.status(409).json({ 
                 error: 'Property already exists with the same name, builder, and location',
                 duplicate: true 
             });
         }
         
-        // Insert new property
-        const result = await db.query(
-            `INSERT INTO real_estate_projects 
-            (project_name, builder_name, project_type, min_price, max_price, size_sqft, bhk, status_possession, location) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [project_name, builder_name, project_type, min_price, max_price, size_sqft, bhk, status_possession, location]
-        );
+        const property = new RealEstateProject({
+            project_name,
+            builder_name,
+            project_type,
+            min_price,
+            max_price,
+            size_sqft,
+            bhk,
+            status_possession,
+            location
+        });
+        
+        await property.save();
         
         res.status(201).json({ 
             success: true, 
             message: 'Property added successfully', 
-            id: result[0].insertId 
+            id: property._id 
         });
     } catch (err) {
         console.error('Error adding property:', err);
@@ -744,79 +735,24 @@ app.post('/api/admin/properties', authenticateToken, async (req, res) => {
 });
 
 // =========================================================================
-// CAREER SUBMISSIONS ENDPOINT
+// ADMIN API: Newsletter Management
 // =========================================================================
 
-// POST career submission
-app.post('/api/career', async (req, res) => {
-    const { name, email, phone, position, resume, message, experience, cover_letter } = req.body;
-    
-    if (!name || !email || !phone || !position) {
-        return res.status(400).json({ error: 'Name, email, phone, and position are required' });
-    }
-    
-    try {
-        // Check for duplicate submission (same email in last 24 hours)
-        const [existing] = await db.query(
-            'SELECT id FROM career_submissions WHERE email = ? AND created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)',
-            [email]
-        );
-        
-        if (existing && existing.length > 0) {
-            return res.status(409).json({ error: 'You have already submitted an application recently. We will review it soon.' });
-        }
-        
-        const result = await db.query(
-            'INSERT INTO career_submissions (name, email, phone, position, experience, resume, cover_letter, message, status, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())',
-            [name, email, phone, position, experience || null, resume || null, cover_letter || null, message || null, 'pending']
-        );
-        
-        // Send emails to user, company, and admin
-        try {
-            const emailResults = await mailer.sendFormEmails('career', {
-                name: name,
-                email: email,
-                phone: phone,
-                position: position,
-                experience: experience,
-                resume_path: resume,
-                message: message || `Applied for: ${position}`,
-                urgent: false
-            });
-            console.log('Career application emails sent:', emailResults);
-        } catch (emailErr) {
-            console.error('Email sending failed:', emailErr);
-        }
-        
-        res.status(201).json({ success: true, message: 'Application submitted successfully', id: result[0].insertId });
-    } catch (err) {
-        console.error('Database error in /api/career:', err);
-        res.status(500).json({ error: 'Failed to submit application' });
-    }
-});
-
-// =========================================================================
-// NEWSLETTER SUBSCRIPTIONS (Admin Routes)
-// =========================================================================
-
-// GET all newsletter subscriptions
 app.get('/api/admin/newsletter-subscriptions', authenticateToken, async (req, res) => {
     try {
-        const query = 'SELECT * FROM newsletter_subscriptions ORDER BY subscribed_at DESC';
-        const [result] = await db.query(query);
-        res.json(result);
+        const subscriptions = await NewsletterSubscription.find().sort({ subscribed_at: -1 });
+        res.json(subscriptions);
     } catch (err) {
-        console.error('Error fetching newsletter subscriptions:', err);
+        console.error('Error fetching subscriptions:', err);
         res.status(500).json({ error: 'Failed to fetch subscriptions' });
     }
 });
 
-// DELETE newsletter subscription
 app.delete('/api/admin/newsletter-subscriptions/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.query('DELETE FROM newsletter_subscriptions WHERE id = ?', [id]);
-        if (result[0].affectedRows === 0) {
+        const subscription = await NewsletterSubscription.findByIdAndDelete(id);
+        if (!subscription) {
             return res.status(404).json({ error: 'Subscription not found' });
         }
         res.sendStatus(204);
@@ -827,114 +763,138 @@ app.delete('/api/admin/newsletter-subscriptions/:id', authenticateToken, async (
 });
 
 // =========================================================================
-// BUILDER INQUIRIES (Admin Routes)
+// ADMIN API: Builder Inquiries Management
 // =========================================================================
 
-// GET all builder inquiries
 app.get('/api/admin/builder-inquiries', authenticateToken, async (req, res) => {
     try {
-        const result = await db.query(`
-            SELECT * FROM builder_inquiries 
-            ORDER BY created_at DESC
-        `);
-        res.json(result[0]);
+        const inquiries = await BuilderInquiry.find().sort({ createdAt: -1 });
+        res.json(inquiries);
     } catch (err) {
         console.error('Error fetching builder inquiries:', err);
         res.status(500).json({ error: 'Failed to fetch builder inquiries' });
     }
 });
 
-// DELETE builder inquiry
 app.delete('/api/admin/builder-inquiries/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.query('DELETE FROM builder_inquiries WHERE id = ?', [id]);
-        if (result[0].affectedRows === 0) {
+        const inquiry = await BuilderInquiry.findByIdAndDelete(id);
+        if (!inquiry) {
             return res.status(404).json({ error: 'Inquiry not found' });
         }
         res.sendStatus(204);
     } catch (err) {
-        console.error('Error deleting builder inquiry:', err);
+        console.error('Error deleting inquiry:', err);
         res.status(500).json({ error: 'Failed to delete inquiry' });
     }
 });
 
 // =========================================================================
-// ADD PROPERTY (Admin Route)
+// ADMIN API: Location Inquiries Management
 // =========================================================================
 
-// Removed duplicate endpoint - using /api/admin/properties instead
-
-// =========================================================================
-// CAREER SUBMISSIONS (Admin Routes)
-// =========================================================================
-
-// GET all career submissions
-app.get('/api/admin/career-submissions', authenticateToken, async (req, res) => {
+app.get('/api/admin/location-inquiries', authenticateToken, async (req, res) => {
     try {
-        const result = await db.query(`
-            SELECT id, name, email, phone, position, experience, resume, 
-                   cover_letter, message, status, submitted_at, created_at
-            FROM career_submissions
-            ORDER BY submitted_at DESC, created_at DESC
-        `);
-        res.json(result[0]);
+        const inquiries = await LocationInquiry.find().sort({ createdAt: -1 });
+        res.json(inquiries);
     } catch (err) {
-        console.error('Error fetching career submissions:', err);
-        res.status(500).json({ error: 'Failed to fetch career submissions' });
+        console.error('Error fetching location inquiries:', err);
+        res.status(500).json({ error: 'Failed to fetch location inquiries' });
     }
 });
 
-// UPDATE career submission status
-app.put('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
+app.delete('/api/admin/location-inquiries/:id', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const inquiry = await LocationInquiry.findByIdAndDelete(id);
+        if (!inquiry) {
+            return res.status(404).json({ error: 'Inquiry not found' });
+        }
+        res.sendStatus(204);
+    } catch (err) {
+        console.error('Error deleting location inquiry:', err);
+        res.status(500).json({ error: 'Failed to delete inquiry' });
+    }
+});
+
+app.put('/api/admin/location-inquiries/:id/status', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
     
-    const validStatuses = ['pending', 'reviewed', 'rejected'];
-    if (!validStatuses.includes(status)) {
-        return res.status(400).json({ error: 'Invalid status' });
-    }
-    
     try {
-        const result = await db.query(
-            'UPDATE career_submissions SET status = ? WHERE id = ?',
-            [status, id]
+        const inquiry = await LocationInquiry.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
         );
         
-        if (result[0].affectedRows === 0) {
-            return res.status(404).json({ error: 'Submission not found' });
+        if (!inquiry) {
+            return res.status(404).json({ error: 'Inquiry not found' });
         }
         
-        res.json({ success: true, message: 'Status updated successfully' });
+        res.json(inquiry);
     } catch (err) {
-        console.error('Error updating career submission:', err);
-        res.status(500).json({ error: 'Failed to update status' });
+        console.error('Error updating location inquiry:', err);
+        res.status(500).json({ error: 'Failed to update inquiry' });
     }
 });
 
-// DELETE career submission
-app.delete('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
+// =========================================================================
+// ADMIN API: Career Submissions Management
+// =========================================================================
+
+app.get('/api/admin/career-submissions', authenticateToken, async (req, res) => {
     try {
-        const result = await db.query('DELETE FROM career_submissions WHERE id = ?', [id]);
-        if (result[0].affectedRows === 0) {
+        const submissions = await CareerSubmission.find().sort({ createdAt: -1 });
+        res.json(submissions);
+    } catch (err) {
+        console.error('Error fetching career submissions:', err);
+        res.status(500).json({ error: 'Failed to fetch submissions' });
+    }
+});
+
+app.put('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
+    const { status } = req.body;
+    try {
+        const submission = await CareerSubmission.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+        
+        if (!submission) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+        
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error updating submission:', err);
+        res.status(500).json({ error: 'Failed to update submission' });
+    }
+});
+
+app.delete('/api/admin/career-submissions/:id', authenticateToken, async (req, res) => {
+    try {
+        const submission = await CareerSubmission.findByIdAndDelete(req.params.id);
+        if (!submission) {
             return res.status(404).json({ error: 'Submission not found' });
         }
         res.sendStatus(204);
     } catch (err) {
-        console.error('Error deleting career submission:', err);
+        console.error('Error deleting submission:', err);
         res.status(500).json({ error: 'Failed to delete submission' });
     }
 });
 
-// Catch-all route for API endpoints that don't exist
-app.all('/api/*', (req, res) => {
-    res.status(404).json({ error: 'API endpoint not found' });
+// =========================================================================
+// SERVER STARTUP
+// =========================================================================
+
+app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`📁 Admin panel: http://localhost:${PORT}/admin`);
+    console.log(`🔗 API endpoints ready`);
 });
 
-// START SERVER
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Public website: http://localhost:${PORT}/`);
-    console.log(`Admin panel: http://localhost:${PORT}/admin/login.html`);
-});
+module.exports = app;

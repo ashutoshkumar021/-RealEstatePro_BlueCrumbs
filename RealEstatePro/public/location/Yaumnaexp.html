@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Properties in Yamuna Expressway | BlueCrumbs Real Estate</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../images/bgremovelogo.png" />
+    <link rel="shortcut icon" type="image/png" href="../images/bgremovelogo.png" />
+    <link rel="apple-touch-icon" href="../images/bgremovelogo.png" />
   <meta name="description" content="Find the best properties in Yamuna Expressway. Premium residential and commercial projects with modern amenities.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +17,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/location-responsive.css">
   
   <style>
     body { padding-top: 70px; }
@@ -378,6 +384,81 @@
       </div>
     </div>
   </section>
+
+  <!-- Location Inquiry Form Section -->
+  <section class="location-inquiry-section py-5" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="inquiry-form-wrapper" style="background: white; border-radius: 15px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <h2 class="text-center mb-4" style="color: #0d2c54;">Interested in Properties in Yamuna Expressway?</h2>
+            <p class="text-center text-muted mb-4">Fill out the form below and our property experts will contact you with the best options</p>
+            
+            <form id="location-inquiry-form">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" name="name" class="form-control" required placeholder="Enter your name">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Email Address *</label>
+                  <input type="email" name="email" class="form-control" required placeholder="Enter your email">
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Phone Number *</label>
+                  <input type="tel" name="phone" class="form-control" required placeholder="Enter 10-digit mobile number" maxlength="10">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Property Type</label>
+                  <select name="property_type" class="form-control">
+                    <option value="">Select Property Type</option>
+                    <option value="Residential">Residential</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Plots">Plots</option>
+                    <option value="Villas">Villas</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Budget Range</label>
+                  <select name="budget" class="form-control">
+                    <option value="">Select Budget</option>
+                    <option value="Below 50 Lac">Below 50 Lac</option>
+                    <option value="50 Lac - 1 Cr">50 Lac - 1 Cr</option>
+                    <option value="1 Cr - 2 Cr">1 Cr - 2 Cr</option>
+                    <option value="2 Cr - 5 Cr">2 Cr - 5 Cr</option>
+                    <option value="Above 5 Cr">Above 5 Cr</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Preferred Sector/Area</label>
+                  <input type="text" name="preferred_area" class="form-control" placeholder="e.g., Sector 18, 20, 22">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Message (Optional)</label>
+                <textarea name="message" class="form-control" rows="3" placeholder="Tell us about your specific requirements..."></textarea>
+              </div>
+              
+              <input type="hidden" name="location_name" value="Yamuna Expressway">
+              
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                  <i class="fas fa-paper-plane"></i> Submit Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   
   <div id="footer-placeholder"></div>
   
@@ -410,12 +491,78 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../js/form-handler.js"></script>
+  <script src="../js/main.js"></script>
   
   <script>
     $(document).ready(function() {
       // Load header & footer
-      $('#header-placeholder').load('../templates/header.html');
+      $('#header-placeholder').load('../templates/header.html', function() {
+        // Initialize sidebar after header is loaded
+        if (typeof initializeSidebar === 'function') {
+          initializeSidebar();
+        }
+      });
       $('#footer-placeholder').load('../templates/footer.html');
+      
+      // Handle location inquiry form submission
+      $('#location-inquiry-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+          name: $(this).find('input[name="name"]').val().trim(),
+          email: $(this).find('input[name="email"]').val().trim(),
+          phone: $(this).find('input[name="phone"]').val().trim(),
+          location_name: $(this).find('input[name="location_name"]').val(),
+          property_type: $(this).find('select[name="property_type"]').val(),
+          budget: $(this).find('select[name="budget"]').val(),
+          preferred_area: $(this).find('input[name="preferred_area"]').val().trim(),
+          message: $(this).find('textarea[name="message"]').val().trim()
+        };
+        
+        // Validation
+        if (!formData.name || formData.name.length < 2) {
+          window.FormHandler.showToast('Please enter a valid name (minimum 2 characters)', true);
+          return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+          window.FormHandler.showToast('Please enter a valid email address', true);
+          return;
+        }
+        
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(formData.phone)) {
+          window.FormHandler.showToast('Please enter a valid 10-digit mobile number', true);
+          return;
+        }
+        
+        const $btn = $(this).find('button[type="submit"]');
+        const originalText = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+        
+        $.ajax({
+          url: '/api/location-inquiry',
+          type: 'POST',
+          data: JSON.stringify(formData),
+          contentType: 'application/json',
+          success: function(response) {
+            window.FormHandler.showToast('Thank you for your interest! Our team will contact you soon.');
+            $('#location-inquiry-form')[0].reset();
+            $('html, body').animate({ scrollTop: 0 }, 500);
+          },
+          error: function(xhr, status, error) {
+            if (xhr.status === 409) {
+              window.FormHandler.showToast('You have already submitted an inquiry. We will contact you soon.', true);
+            } else {
+              window.FormHandler.showToast('There was an error submitting your inquiry. Please try again.', true);
+            }
+          },
+          complete: function() {
+            $btn.prop('disabled', false).html(originalText);
+          }
+        });
+      });
     });
   </script>
 </body>

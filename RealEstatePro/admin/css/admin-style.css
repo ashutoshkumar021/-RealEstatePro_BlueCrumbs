@@ -1,4 +1,4 @@
-/* ======== GLOBAL & LOGIN STYLES (UNCHANGED) ======== */
+/* ======== GLOBAL & RESPONSIVE STYLES ======== */
 :root {
     --admin-primary: #2c3e50;
     --admin-secondary: #34495e;
@@ -23,13 +23,103 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); ma
 .btn:hover { background: #16a085; }
 .status-message { text-align: center; margin-top: 15px; font-weight: 500; color: var(--admin-danger); }
 
-/* ======== NEW DASHBOARD DESIGN ======== */
+/* ======== DASHBOARD LAYOUT ======== */
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
     background: linear-gradient(135deg, rgba(13, 44, 84, 0.95), rgba(102, 126, 234, 0.9)),
                 url('https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2574') center/cover no-repeat fixed;
     padding-top: 70px; /* Make space for fixed header */
+}
+
+/* Main content area */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 250px; /* Match sidebar width */
+    transition: margin 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+}
+
+/* Table responsiveness */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+/* Form elements */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+/* Mobile menu toggle button */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+}
+
+/* Card styles */
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+/* Responsive images */
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* --- Sidebar --- */
@@ -49,11 +139,21 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); ma
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid var(--admin-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 .sidebar-logo {
-    font-size: 1.8rem;
-    font-weight: 700;
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+.sidebar-logo-text {
+    font-size: 1.2rem;
+    font-weight: 600;
     color: white;
+    margin: 0;
 }
 .sidebar-menu {
     list-style: none;
