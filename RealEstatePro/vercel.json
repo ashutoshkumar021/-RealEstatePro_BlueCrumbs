@@ -1,23 +1,36 @@
 {
   "builds": [
     {
-      "src": "server/app.js",
+      "src": "server/server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
+    
+    {
+      "src": "^/admin/(?:login.html|dashboard.html|index.html|css/.*|js/.*)$",
+      "dest": "/admin/$1"
+    },
     {
       "src": "^/admin(?:/.*)?$",
-      "dest": "/admin/index.html"
+      "dest": "/admin/login.html"
     },
+    
+   
     {
       "src": "/inquiry",
-      "dest": "/server/app.js"
+      "dest": "/server/server.js"
     },
     {
-      "src": "/builders-data",
-      "dest": "/server/app.js"
+      "src": "/admin/login",
+      "dest": "/server/server.js"
     },
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/server.js"
+    },
+    
+   
     {
       "src": "^/(.*)",
       "dest": "/public/$1"
