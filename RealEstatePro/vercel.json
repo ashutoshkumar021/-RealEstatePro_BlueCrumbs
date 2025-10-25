@@ -1,8 +1,22 @@
 {
+  "builds": [
+    {
+      "src": "server/app.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
     {
       "src": "^/admin(?:/.*)?$",
       "dest": "/admin/index.html"
+    },
+    {
+      "src": "/inquiry",
+      "dest": "/server/app.js"
+    },
+    {
+      "src": "/builders-data",
+      "dest": "/server/app.js"
     },
     {
       "src": "^/(.*)",
