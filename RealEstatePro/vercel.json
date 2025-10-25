@@ -8,6 +8,24 @@
   "routes": [
     
     {
+      "src": "^/$",
+      "dest": "/public/templates/index.html"
+    },
+    {
+      "src": "^/(favicon\\.ico)$",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "^/(css|js|images|location)/(.*)",
+      "dest": "/public/$1/$2"
+    },
+    
+    {
+      "src": "^/(?!admin|api)(.*)\\.html$",
+      "dest": "/public/templates/$1.html"
+    },
+    
+    {
       "src": "^/admin/(?:login.html|dashboard.html|index.html|css/.*|js/.*)$",
       "dest": "/admin/$1"
     },
@@ -16,24 +34,13 @@
       "dest": "/admin/login.html"
     },
     
-   
     {
       "src": "/inquiry",
       "dest": "/server/server.js"
     },
     {
-      "src": "/admin/login",
-      "dest": "/server/server.js"
-    },
-    {
       "src": "/api/(.*)",
       "dest": "/server/server.js"
-    },
-    
-   
-    {
-      "src": "^/(.*)",
-      "dest": "/public/$1"
     }
   ]
 }
