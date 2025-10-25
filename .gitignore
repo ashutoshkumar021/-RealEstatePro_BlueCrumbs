@@ -1,2 +1,19 @@
-# Ignore node modules
+# Dependencies
 /node_modules
+/.pnp
+.pnp.js
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+/dist
+/.vercel
+
+# Local environment
+.env
+.env.local
+.DS_Store
+Thumbs.db
