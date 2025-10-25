@@ -6,7 +6,6 @@
     }
   ],
   "routes": [
-    
     {
       "src": "^/$",
       "dest": "/public/templates/index.html"
@@ -19,21 +18,14 @@
       "src": "^/(css|js|images|location)/(.*)",
       "dest": "/public/$1/$2"
     },
-    
     {
       "src": "^/(?!admin|api)(.*)\\.html$",
       "dest": "/public/templates/$1.html"
     },
-    
     {
-      "src": "^/admin/(?:login.html|dashboard.html|index.html|css/.*|js/.*)$",
+      "src": "^/admin/(.*)$",
       "dest": "/admin/$1"
     },
-    {
-      "src": "^/admin(?:/.*)?$",
-      "dest": "/admin/login.html"
-    },
-    
     {
       "src": "/inquiry",
       "dest": "/server/server.js"
